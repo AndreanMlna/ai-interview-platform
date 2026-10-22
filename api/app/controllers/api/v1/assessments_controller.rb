@@ -30,8 +30,8 @@ module Api
         assessment.created_by = current_user.id
 
         if assessment.save
-          SystemPromptGeneratorWorker.perform_async(assessment.id)
-          json_response({ assessment:, system_prompt_generated: true }, :created)
+          generate_system_prompt_safely(assessment)
+          json_response({ assessment: assessment_with_skills_json(assessment), system_prompt_generated: true }, :created)
         else
           json_error(assessment.errors.full_messages.first, :unprocessable_entity)
         end
@@ -40,7 +40,7 @@ module Api
       # PUT /api/v1/assessments/:id
       def update
         if @assessment.update(assessment_params)
-          SystemPromptGeneratorWorker.perform_async(@assessment.id)
+          generate_system_prompt_safely(@assessment)
           json_response({ assessment: assessment_with_skills_json(@assessment), system_prompt_generated: true })
         else
           json_error(@assessment.errors.full_messages.first, :unprocessable_entity)
@@ -54,6 +54,18 @@ module Api
       end
 
       private
+
+      def generate_system_prompt_safely(assessment)
+        prompt = Assessments::SystemPromptCompiler.new(assessment).call
+        assessment.update_column(:system_prompt, prompt)
+      rescue StandardError => e
+        Rails.logger.warn("[AssessmentsController] Inline prompt compilation failed: #{e.message}")
+        begin
+          SystemPromptGeneratorWorker.perform_async(assessment.id)
+        rescue StandardError => worker_err
+          Rails.logger.warn("[AssessmentsController] Sidekiq enqueue failed: #{worker_err.message}")
+        end
+      end
 
       def set_assessment
         @assessment = Assessment.find(params[:id])
