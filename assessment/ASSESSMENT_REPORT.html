@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Engineering &amp; Product Assessment Report — Rakamin AI Interview Platform</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #ffffff;
+      --fg: #0f172a;
+      --muted: #64748b;
+      --border: #e2e8f0;
+      --card-bg: #f8fafc;
+      --primary: #0284c7;
+      --primary-dark: #0369a1;
+      --accent: #f59e0b;
+      --success: #10b981;
+      --danger: #ef4444;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      color: var(--fg);
+      background-color: var(--bg);
+      line-height: 1.65;
+      font-size: 14.5px;
+      padding: 40px 24px;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    .header {
+      border-bottom: 2px solid var(--border);
+      padding-bottom: 24px;
+      margin-bottom: 32px;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 4px 10px;
+      background: #e0f2fe;
+      color: #0369a1;
+      font-size: 12px;
+      font-weight: 600;
+      border-radius: 9999px;
+      margin-bottom: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    h1 {
+      font-size: 26px;
+      font-weight: 800;
+      color: #0f172a;
+      letter-spacing: -0.5px;
+      margin-bottom: 8px;
+    }
+
+    .meta-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 12px;
+      margin-top: 16px;
+      background: var(--card-bg);
+      padding: 14px 18px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      font-size: 13px;
+    }
+
+    .meta-item strong { color: #334155; }
+
+    h2 {
+      font-size: 19px;
+      font-weight: 700;
+      color: #1e293b;
+      margin-top: 36px;
+      margin-bottom: 16px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    h3 {
+      font-size: 15.5px;
+      font-weight: 600;
+      color: #334155;
+      margin-top: 20px;
+      margin-bottom: 10px;
+    }
+
+    p { margin-bottom: 14px; }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 18px 0;
+      font-size: 13px;
+    }
+
+    th, td {
+      border: 1px solid var(--border);
+      padding: 10px 12px;
+      text-align: left;
+    }
+
+    th {
+      background: #f1f5f9;
+      font-weight: 600;
+      color: #1e293b;
+    }
+
+    tr:nth-child(even) { background: #fafafa; }
+
+    pre, code {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12.5px;
+    }
+
+    pre {
+      background: #0f172a;
+      color: #f8fafc;
+      padding: 16px;
+      border-radius: 8px;
+      overflow-x: auto;
+      margin: 16px 0;
+      line-height: 1.5;
+    }
+
+    .callout {
+      border-left: 4px solid var(--primary);
+      background: #f0f9ff;
+      padding: 14px 18px;
+      border-radius: 0 8px 8px 0;
+      margin: 18px 0;
+      font-size: 13.5px;
+    }
+
+    .callout.danger {
+      border-left-color: var(--danger);
+      background: #fef2f2;
+    }
+
+    .callout.success {
+      border-left-color: var(--success);
+      background: #ecfdf5;
+    }
+
+    .checklist {
+      list-style: none;
+      margin: 14px 0;
+    }
+
+    .checklist li {
+      padding: 6px 0;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .print-bar {
+      position: sticky;
+      top: 0;
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(8px);
+      padding: 12px 0;
+      margin-bottom: 24px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      justify-content: flex-end;
+      gap: 12px;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: #0284c7;
+      color: #fff;
+      font-weight: 600;
+      font-size: 13px;
+      padding: 8px 16px;
+      border-radius: 6px;
+      border: none;
+      cursor: pointer;
+      text-decoration: none;
+      transition: background 0.2s;
+    }
+    .btn:hover { background: #0369a1; }
+
+    @media print {
+      body { padding: 0; font-size: 11pt; }
+      .print-bar { display: none; }
+      .container { max-width: 100%; }
+      pre { white-space: pre-wrap; word-break: break-all; }
+      table { page-break-inside: avoid; }
+      h2 { page-break-after: avoid; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="print-bar">
+      <button class="btn" onclick="window.print()">🖨 Cetak Dokumen / Simpan sebagai PDF</button>
+    </div>
+
+    <div class="header">
+      <span class="badge">Rakamin Case Study Submission</span>
+      <h1>Technical Assessment Report: Fullstack Product Engineer</h1>
+      <p style="color: var(--muted); margin-bottom: 0;">Evaluasi Komprehensif, Refactoring &amp; Pengujian Monozukuri pada Platform AI-Interview</p>
+
+      <div class="meta-grid">
+        <div class="meta-item"><strong>Kandidat:</strong> Andrian Maulana</div>
+        <div class="meta-item"><strong>Track:</strong> Backend &amp; Product Engineering</div>
+        <div class="meta-item"><strong>Repository:</strong> github.com/rakamindev/ai-interview-platform</div>
+        <div class="meta-item"><strong>Branch:</strong> <code>feature/monozukuri-revamp</code></div>
+        <div class="meta-item"><strong>Target:</strong> <code>origin/main</code> (Pull Request)</div>
+        <div class="meta-item"><strong>Standar Regulasi:</strong> UU No. 27/2022 (UU PDP)</div>
+      </div>
+    </div>
+
+    <h2>1. Executive Summary &amp; Domain Immersion</h2>
+    <p>
+      Platform wawancara kerja berbasis kecerdasan buatan (<em>AI Interview Platform</em>) merupakan sistem dengan tingkat dampak sangat tinggi (<em>high-stakes product</em>). Pihak yang paling terpengaruh oleh sistem ini adalah <strong>kandidat pelamar kerja</strong>—mereka yang tidak pernah memilih sistem ini dan tidak memiliki opsi untuk menolak (<em>the people affected who never chose it</em>). Keputusan inferensi AI yang keliru atau penyembunyian rekomendasi rekruter dapat mengubah jalan hidup seseorang.
+    </p>
+    <div class="callout">
+      <strong>Prinsip Monozukuri &amp; Craftsmanship:</strong> Setiap keputusan arsitektural didasarkan pada pembuktian kebenaran sistem secara empiris (<em>proven correctness</em>), toleransi kegagalan (<em>graceful degradation</em>), serta kepatuhan mutlak pada regulasi hukum perlindungan data pribadi Indonesia.
+    </div>
+
+    <h2>2. Temuan Kritis &amp; Problem Classification Matrix (P0 – P3)</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Severitas</th>
+          <th>Komponen</th>
+          <th>Masalah (Gap to Ideal)</th>
+          <th>Dampak Nyata Produk</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong style="color: var(--danger);">P0 (Critical)</strong></td>
+          <td><code>FitGap::Engine</code> &amp; <code>ComparisonTable</code></td>
+          <td>Ketidakcocokan kunci kontrak: backend mengirim <code>expected_level</code>, frontend membaca <code>required_level</code>.</td>
+          <td>Kolom Required Level kosong (<code>—</code>) dan penanda override asesor (<code>✏ Override</code>) tidak pernah tampil.</td>
+        </tr>
+        <tr>
+          <td><strong style="color: var(--danger);">P0 (Critical)</strong></td>
+          <td><code>FitGapReportPage.tsx</code></td>
+          <td>Short-circuit logic: <code>report.culture_narrative || report.overall_narrative</code>.</td>
+          <td>Rekomendasi perekrutan utama (<em>Overall Hiring Recommendation</em>) tersembunyi total saat narasi budaya ada.</td>
+        </tr>
+        <tr>
+          <td><strong style="color: var(--accent);">P1 (High)</strong></td>
+          <td><code>Portfolios::Generator</code> &amp; <code>Coverage::Analyzer</code></td>
+          <td>Transkrip mentah (Email, Telepon, NIK 16 digit, Nama) dikirim langsung ke LLM eksternal.</td>
+          <td>Pelanggaran hukum terhadap <strong>UU No. 27/2022 tentang Pelindungan Data Pribadi (UU PDP)</strong>.</td>
+        </tr>
+        <tr>
+          <td><strong style="color: var(--accent);">P1 (High)</strong></td>
+          <td>Infrastruktur Model LLM</td>
+          <td>Hardcoded model usang (<code>gemini-2.0-flash-001</code>, <code>gemini-2.0-pro-001</code>).</td>
+          <td>Risiko deprecation outage dan tidak tersedianya fallback narasi untuk <em>unassessed skills</em>.</td>
+        </tr>
+        <tr>
+          <td><strong>P2 (Medium)</strong></td>
+          <td><code>PortfolioPage.tsx</code> &amp; <code>SkillPortfolioCard</code></td>
+          <td>Kutipan transkrip panjang meluap (overflow); unhandled fetch errors membuat layar kosong.</td>
+          <td>Cacat pada 6 kondisi interaksi visual (<em>empty state, error retry, long text wrapping</em>).</td>
+        </tr>
+        <tr>
+          <td><strong>P2 (Medium)</strong></td>
+          <td>Test Harness Repositori</td>
+          <td>0 test specs di backend Rails; 0 test runner di web React; tidak ada CI pipeline.</td>
+          <td>Sistem tidak terlindungi dari regresi saat insinyur melakukan modifikasi atau perbaikan.</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h2>3. Strategi Revamp &amp; Evaluasi Trade-off</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Kriteria Evaluasi</th>
+          <th>Option A: Full Event-Driven Microservices</th>
+          <th>Option B: Pragmatic Hexagonal Resiliency (Dipilih)</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Product Impact vs Cost</strong></td>
+          <td>Biaya refactoring masif, risiko tinggi regresi dalam batas waktu 48 jam.</td>
+          <td><strong>Optimal</strong>: Memperbaiki seam kontrak pada boundary dan memanfaatkan Sidekiq yang ada.</td>
+        </tr>
+        <tr>
+          <td><strong>Maintainability</strong></td>
+          <td>Overhead operasional tinggi (distributed tracing, message queue ops).</td>
+          <td><strong>Sangat Tinggi</strong>: Clean architecture modular, mudah dipelihara dan diuji dengan RSpec.</td>
+        </tr>
+        <tr>
+          <td><strong>Failure Modes</strong></td>
+          <td>Message broker bottleneck saat beban spike.</td>
+          <td>Panggilan LLM terlindungi oleh exponential backoff, timeout, dan fallback narrative.</td>
+        </tr>
+        <tr>
+          <td><strong>Kesesuaian Konteks</strong></td>
+          <td>Tidak realistis untuk submission berkualitas tinggi dalam 48 jam.</td>
+          <td><strong>Tepat Sasaran</strong>: Langsung menyelesaikan P0–P2 dengan bukti pengujian empiris.</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h2>4. Bukti Empiris: Seeded Fault Test (Test Rigor)</h2>
+    <p>
+      Untuk membuktikan bahwa asersi pengujian otomatis bukan sekadar <em>green theatre</em> (tes yang selalu lulus), dilakukan pengujian kegagalan terencana (<em>Seeded Fault Test</em>) pada branch <code>fault-test/prove-assertion-validity</code>:
+    </p>
+    <div class="callout danger">
+      <strong>Hasil Log Kegagalan Tes (RED State — Bukti Validitas Asersi):</strong>
+      <pre>FAIL  src/components/fitgap/__tests__/ComparisonTable.test.tsx
+  > falls back to expected_level if required_level is undefined
+  TestingLibraryElementError: Unable to find an element with the text: L5 (Expert).
+
+  > displays human override indicator (✏ Override) when is_override is true
+  TestingLibraryElementError: Unable to find an element with the text: /✏ Override/i.
+
+Tests: 2 failed | 6 passed (8)</pre>
+    </div>
+    <div class="callout success">
+      <strong>Hasil Pemulihan Tes (GREEN State pada <code>feature/monozukuri-revamp</code>):</strong>
+      <pre>✓ src/components/fitgap/__tests__/ComparisonTable.test.tsx (6 tests) 60ms
+✓ src/pages/fitgap/__tests__/FitGapReportPage.test.tsx (2 tests) 82ms
+
+Test Files: 2 passed (2) | Tests: 8 passed (8)</pre>
+    </div>
+    <p><em>Bukti riwayat git tercatat pada commit <code>fd75835</code> di repositori lokal.</em></p>
+
+    <h2>5. Kepatuhan Hukum: UU No. 27/2022 (UU PDP)</h2>
+    <p>
+      Diimplementasikan engine <code>Security::PiiSanitizer</code> (<code>api/app/services/security/pii_sanitizer.rb</code>) yang secara deterministik menyensor data pribadi kandidat sebelum transkrip dikirim ke model eksternal Google Gemini:
+    </p>
+    <ul style="margin-left: 20px; margin-bottom: 16px;">
+      <li><strong>Email:</strong> <code>[EMAIL_REDACTED]</code></li>
+      <li><strong>No. HP Indonesia (+62/08):</strong> <code>[PHONE_REDACTED]</code></li>
+      <li><strong>NIK (16 Digit):</strong> <code>[NIK_REDACTED]</code></li>
+      <li><strong>Nama Kandidat:</strong> <code>[CANDIDATE_NAME]</code></li>
+    </ul>
+
+    <h2>6. AI Verification Moment</h2>
+    <p>
+      Saat asisten AI pertama kali membuat pengujian komponen, AI berasumsi bahwa nilai level pada payload adalah string langsung (<code>"Advanced"</code>). Pemeriksaan empiris oleh insinyur mendeteksi bahwa database Rails menggunakan integer (<code>1..5</code>), sehingga kode asli akan me-render nilai cacat (<code>Lundefined</code>). Insinyur memvalidasi dan membetulkan kode dengan membuat parser dwiarah <code>formatLevel()</code> dan <code>parseLevel()</code> yang toleran terhadap format numerik maupun string.
+    </p>
+
+    <h2>7. Deliverables &amp; Persiapan Live Defense</h2>
+    <ul class="checklist">
+      <li>✅ <strong>Open Pull Request:</strong> Branch <code>feature/monozukuri-revamp</code> siap diajukan ke <code>main</code>.</li>
+      <li>✅ <strong>Single PDF Report:</strong> Halaman ini siap dicetak langsung menjadi PDF berstandar tinggi.</li>
+      <li>✅ <strong>Automated Test Suites:</strong> 8 unit test di Vitest + RSpec harness di backend Rails.</li>
+      <li>✅ <strong>Video Walkthrough Outline:</strong> Panduan 3–5 menit terstruktur mencakup filosofi, P0 fix, Seeded Fault Test, dan UI states.</li>
+      <li>✅ <strong>Live Defense Readiness:</strong> Siap mempertahankan keputusan arsitektural di hadapan CTO dan Tech Lead.</li>
+    </ul>
+  </div>
+</body>
+</html>
