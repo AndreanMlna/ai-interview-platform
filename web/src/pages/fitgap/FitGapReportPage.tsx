@@ -9,6 +9,7 @@ import { portfoliosApi } from "@/services/portfolios";
 import { sessionsApi } from "@/services/sessions";
 import { usePolling } from "@/hooks/usePolling";
 import { ArrowLeft, Download, Loader2, RefreshCw, Zap } from "lucide-react";
+import { cn } from "@/lib/utils";
 import type { FitGapReport, Portfolio } from "@/types";
 
 export default function FitGapReportPage() {
@@ -151,6 +152,95 @@ export default function FitGapReportPage() {
       {/* Report ready */}
       {report && (
         <>
+          {/* Executive KPI Scorecard */}
+          {(() => {
+            const comps = report.skill_comparisons || [];
+            const total = comps.length;
+            const matchCount = comps.filter((c) => c.result === "match").length;
+            const exceedCount = comps.filter((c) => c.result === "exceed").length;
+            const gapCount = comps.filter((c) => c.result === "gap").length;
+            const unassessedCount = comps.filter((c) => c.result === "not_assessed").length;
+            const fitScore = total > 0 ? Math.round(((matchCount + exceedCount) / total) * 100) : 0;
+
+            let badgeText = "Strong Candidate Fit";
+            let badgeBg = "bg-green-100 text-green-800 border-green-200";
+            if (unassessedCount > 0) {
+              badgeText = "Evaluation Incomplete";
+              badgeBg = "bg-neutral-100 text-neutral-800 border-neutral-200";
+            } else if (gapCount > 1) {
+              badgeText = "Substantial Skill Gaps";
+              badgeBg = "bg-amber-100 text-amber-800 border-amber-200";
+            } else if (gapCount === 1) {
+              badgeText = "Minor Skill Gap Identified";
+              badgeBg = "bg-blue-100 text-blue-800 border-blue-200";
+            }
+
+            return (
+              <Card className="bg-gradient-to-br from-card to-muted/20 border shadow-sm">
+                <CardContent className="p-5">
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                    <div className="space-y-1">
+                      <div className="flex items-center gap-2">
+                        <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Executive Summary</span>
+                        <span className={cn("text-[11px] font-semibold px-2 py-0.5 rounded-full border", badgeBg)}>
+                          {badgeText}
+                        </span>
+                      </div>
+                      <div className="flex items-baseline gap-2">
+                        <span className="text-3xl font-extrabold text-foreground">{fitScore}%</span>
+                        <span className="text-sm text-muted-foreground font-medium">Role Competency Fit</span>
+                      </div>
+                    </div>
+
+                    <div className="flex items-center gap-2.5 text-xs">
+                      <div className="rounded-lg bg-green-50 border border-green-200/60 px-3 py-1.5 text-center">
+                        <div className="font-bold text-green-700 text-sm">{matchCount + exceedCount}</div>
+                        <div className="text-[11px] text-green-600 font-medium">Meets/Exceeds</div>
+                      </div>
+                      <div className="rounded-lg bg-amber-50 border border-amber-200/60 px-3 py-1.5 text-center">
+                        <div className="font-bold text-amber-700 text-sm">{gapCount}</div>
+                        <div className="text-[11px] text-amber-600 font-medium">Skill Gaps</div>
+                      </div>
+                      <div className="rounded-lg bg-neutral-100 border border-neutral-200 px-3 py-1.5 text-center">
+                        <div className="font-bold text-neutral-700 text-sm">{unassessedCount}</div>
+                        <div className="text-[11px] text-neutral-500 font-medium">Unassessed</div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Ratio bar */}
+                  {total > 0 && (
+                    <div className="mt-4 pt-3 border-t">
+                      <div className="w-full h-2 rounded-full overflow-hidden flex bg-neutral-100">
+                        {matchCount + exceedCount > 0 && (
+                          <div
+                            style={{ width: `${((matchCount + exceedCount) / total) * 100}%` }}
+                            className="bg-green-600 transition-all duration-500"
+                            title={`Fit: ${matchCount + exceedCount}`}
+                          />
+                        )}
+                        {gapCount > 0 && (
+                          <div
+                            style={{ width: `${(gapCount / total) * 100}%` }}
+                            className="bg-amber-500 transition-all duration-500"
+                            title={`Gaps: ${gapCount}`}
+                          />
+                        )}
+                        {unassessedCount > 0 && (
+                          <div
+                            style={{ width: `${(unassessedCount / total) * 100}%` }}
+                            className="bg-neutral-300 transition-all duration-500"
+                            title={`Unassessed: ${unassessedCount}`}
+                          />
+                        )}
+                      </div>
+                    </div>
+                  )}
+                </CardContent>
+              </Card>
+            );
+          })()}
+
           {/* Skill comparison */}
           <Card>
             <CardHeader className="pb-3">

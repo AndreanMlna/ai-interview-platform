@@ -123,10 +123,18 @@ module Exports
 
       table_data = [['Skill', 'Required', 'Candidate', 'Result', 'Delta']]
       comparisons.each do |c|
+        req_level = c['required_level'] || c['expected_level']
+        cand_level = c['candidate_level']
+        cand_text = if cand_level
+                      c['is_override'] ? "L#{cand_level} *" : "L#{cand_level}"
+                    else
+                      'Not Assessed'
+                    end
+
         table_data << [
           c['skill_label'],
-          c['expected_level'] ? "L#{c['expected_level']}" : '—',
-          c['candidate_level'] ? "L#{c['candidate_level']}" : '—',
+          req_level ? "L#{req_level}" : '—',
+          cand_text,
           RESULT_LABELS[c['result']] || c['result'],
           c['delta'] ? (c['delta'] > 0 ? "+#{c['delta']}" : c['delta'].to_s) : '—'
         ]

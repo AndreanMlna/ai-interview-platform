@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { render, screen } from "@testing-library/react";
+import { render, screen, fireEvent } from "@testing-library/react";
 import ComparisonTable from "../ComparisonTable";
 import type { SkillComparison } from "@/types";
 
@@ -134,5 +134,28 @@ describe("ComparisonTable", () => {
     expect(screen.getByText(/⚠ Gap: 1/i)).toBeInTheDocument();
     expect(screen.getByText(/⭐ Exceeds: 1/i)).toBeInTheDocument();
     expect(screen.getByText(/⚪ Unassessed: 1/i)).toBeInTheDocument();
+  });
+
+  it("filters skill rows dynamically when filter pills are clicked", () => {
+    const mockComparisons: SkillComparison[] = [
+      { skill_id: 1, skill_label: "Skill Alpha Match", required_level: 2, candidate_level: 2, delta: 0, result: "match" },
+      { skill_id: 2, skill_label: "Skill Beta Gap", required_level: 4, candidate_level: 2, delta: -2, result: "gap" },
+    ];
+
+    const { getByRole, getByText, queryByText } = render(<ComparisonTable comparisons={mockComparisons} />);
+
+    // Initially both skills are rendered
+    expect(getByText("Skill Alpha Match")).toBeInTheDocument();
+    expect(getByText("Skill Beta Gap")).toBeInTheDocument();
+
+    // Click Gaps filter pill
+    fireEvent.click(getByRole("button", { name: /Gaps/i }));
+    expect(queryByText("Skill Alpha Match")).not.toBeInTheDocument();
+    expect(getByText("Skill Beta Gap")).toBeInTheDocument();
+
+    // Click All filter pill
+    fireEvent.click(getByRole("button", { name: /^All/i }));
+    expect(getByText("Skill Alpha Match")).toBeInTheDocument();
+    expect(getByText("Skill Beta Gap")).toBeInTheDocument();
   });
 });
