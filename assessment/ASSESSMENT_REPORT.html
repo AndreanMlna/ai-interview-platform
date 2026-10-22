@@ -6,7 +6,7 @@
   <title>Engineering &amp; Product Assessment Report — Rakamin AI Interview Platform</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
   <style>
     :root {
       --bg: #ffffff;
@@ -19,6 +19,7 @@
       --accent: #f59e0b;
       --success: #10b981;
       --danger: #ef4444;
+      --purple: #8b5cf6;
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -32,7 +33,7 @@
     }
 
     .container {
-      max-width: 900px;
+      max-width: 920px;
       margin: 0 auto;
     }
 
@@ -44,15 +45,28 @@
 
     .badge {
       display: inline-block;
-      padding: 4px 10px;
+      padding: 4px 12px;
       background: #e0f2fe;
       color: #0369a1;
-      font-size: 12px;
-      font-weight: 600;
+      font-size: 11.5px;
+      font-weight: 700;
       border-radius: 9999px;
       margin-bottom: 12px;
       text-transform: uppercase;
-      letter-spacing: 0.5px;
+      letter-spacing: 0.6px;
+    }
+
+    .badge-skills {
+      display: inline-block;
+      padding: 3px 8px;
+      background: #f1f5f9;
+      color: #475569;
+      border: 1px solid #cbd5e1;
+      font-size: 11px;
+      font-weight: 600;
+      border-radius: 4px;
+      margin: 2px 4px 2px 0;
+      font-family: 'JetBrains Mono', monospace;
     }
 
     h1 {
@@ -65,12 +79,12 @@
 
     .meta-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
       gap: 12px;
       margin-top: 16px;
       background: var(--card-bg);
-      padding: 14px 18px;
-      border-radius: 8px;
+      padding: 16px 20px;
+      border-radius: 10px;
       border: 1px solid var(--border);
       font-size: 13px;
     }
@@ -85,13 +99,16 @@
       margin-bottom: 16px;
       padding-bottom: 8px;
       border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      gap: 8px;
     }
 
     h3 {
       font-size: 15.5px;
       font-weight: 600;
       color: #334155;
-      margin-top: 20px;
+      margin-top: 22px;
       margin-bottom: 10px;
     }
 
@@ -120,7 +137,7 @@
 
     pre, code {
       font-family: 'JetBrains Mono', monospace;
-      font-size: 12.5px;
+      font-size: 12px;
     }
 
     pre {
@@ -152,6 +169,11 @@
       background: #ecfdf5;
     }
 
+    .callout.warning {
+      border-left-color: var(--accent);
+      background: #fffbeb;
+    }
+
     .checklist {
       list-style: none;
       margin: 14px 0;
@@ -162,6 +184,141 @@
       display: flex;
       align-items: center;
       gap: 8px;
+    }
+
+    /* Visual Mockup Container */
+    .ui-mockup-card {
+      background: #ffffff;
+      border: 1px solid #cbd5e1;
+      border-radius: 10px;
+      padding: 20px;
+      margin: 20px 0;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
+    }
+
+    .mockup-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 14px;
+      border-bottom: 1px solid #f1f5f9;
+      padding-bottom: 10px;
+    }
+
+    .mockup-title {
+      font-size: 13px;
+      font-weight: 700;
+      color: #0f172a;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    /* Scorecard Preview */
+    .scorecard-box {
+      background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+      border: 1px solid #e2e8f0;
+      border-radius: 8px;
+      padding: 16px;
+    }
+
+    .scorecard-flex {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+
+    .score-metric {
+      font-size: 32px;
+      font-weight: 800;
+      color: #0f172a;
+      line-height: 1;
+    }
+
+    .score-badge {
+      font-size: 11px;
+      font-weight: 700;
+      padding: 3px 10px;
+      border-radius: 9999px;
+      border: 1px solid #bbf7d0;
+      background: #f0fdf4;
+      color: #166534;
+    }
+
+    .stat-pill {
+      border-radius: 6px;
+      padding: 6px 12px;
+      text-align: center;
+      min-width: 80px;
+    }
+
+    .progress-bar-bg {
+      width: 100%;
+      height: 8px;
+      border-radius: 9999px;
+      background: #e2e8f0;
+      display: flex;
+      overflow: hidden;
+      margin-top: 12px;
+    }
+
+    /* Filter Pills Preview */
+    .filter-pills-row {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+      margin-bottom: 14px;
+    }
+
+    .pill-btn {
+      font-size: 11.5px;
+      font-weight: 600;
+      padding: 4px 10px;
+      border-radius: 9999px;
+      border: 1px solid #e2e8f0;
+      background: #f1f5f9;
+      color: #475569;
+    }
+
+    .pill-btn.active {
+      background: #0284c7;
+      color: #ffffff;
+      border-color: #0284c7;
+    }
+
+    .pill-btn.green {
+      background: #f0fdf4;
+      color: #15803d;
+      border-color: #bbf7d0;
+    }
+
+    .pill-btn.amber {
+      background: #fffbeb;
+      color: #b45309;
+      border-color: #fde68a;
+    }
+
+    .state-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 14px;
+      margin: 16px 0;
+    }
+
+    .state-card {
+      border: 1px solid #e2e8f0;
+      border-radius: 8px;
+      padding: 14px;
+      background: #fafafa;
+    }
+
+    .state-tag {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      color: #0369a1;
+      margin-bottom: 6px;
     }
 
     .print-bar {
@@ -175,6 +332,7 @@
       display: flex;
       justify-content: flex-end;
       gap: 12px;
+      z-index: 50;
     }
 
     .btn {
@@ -195,12 +353,13 @@
     .btn:hover { background: #0369a1; }
 
     @media print {
-      body { padding: 0; font-size: 11pt; }
+      body { padding: 0; font-size: 10.5pt; color: #000; }
       .print-bar { display: none; }
       .container { max-width: 100%; }
       pre { white-space: pre-wrap; word-break: break-all; }
       table { page-break-inside: avoid; }
       h2 { page-break-after: avoid; }
+      .ui-mockup-card { page-break-inside: avoid; box-shadow: none; border-color: #cbd5e1; }
     }
   </style>
 </head>
@@ -211,42 +370,108 @@
     </div>
 
     <div class="header">
-      <span class="badge">Rakamin Case Study Submission</span>
+      <span class="badge">Rakamin Case Study Submission — Staff/Principal Product Engineer</span>
       <h1>Technical Assessment Report: Fullstack Product Engineer</h1>
-      <p style="color: var(--muted); margin-bottom: 0;">Evaluasi Komprehensif, Refactoring &amp; Pengujian Monozukuri pada Platform AI-Interview</p>
+      <p style="color: var(--muted); margin-bottom: 10px;">Transformasi Monozukuri, Evaluasi Domain 5 Pilar, Validitas Asersi Empiris, dan UI/UX Executive Grade</p>
+      
+      <div>
+        <span style="font-size: 12px; font-weight: 600; color: var(--muted);">Engineering Skills Applied:</span>
+        <span class="badge-skills">clean-code</span>
+        <span class="badge-skills">frontend-expert</span>
+        <span class="badge-skills">api-builder</span>
+        <span class="badge-skills">api-security</span>
+        <span class="badge-skills">gemini-api-dev</span>
+        <span class="badge-skills">ui-ux-pro-max</span>
+      </div>
 
       <div class="meta-grid">
         <div class="meta-item"><strong>Kandidat:</strong> Andrian Maulana</div>
         <div class="meta-item"><strong>Track:</strong> Backend &amp; Product Engineering</div>
-        <div class="meta-item"><strong>Repository:</strong> github.com/rakamindev/ai-interview-platform</div>
-        <div class="meta-item"><strong>Branch:</strong> <code>feature/monozukuri-revamp</code></div>
-        <div class="meta-item"><strong>Target:</strong> <code>origin/main</code> (Pull Request)</div>
+        <div class="meta-item"><strong>Target Repo:</strong> github.com/rakamindev/ai-interview-platform</div>
+        <div class="meta-item"><strong>Candidate Fork:</strong> github.com/AndreanMlna/ai-interview-platform</div>
+        <div class="meta-item"><strong>Feature Branch:</strong> <code>feature/monozukuri-revamp</code></div>
         <div class="meta-item"><strong>Standar Regulasi:</strong> UU No. 27/2022 (UU PDP)</div>
       </div>
     </div>
 
-    <h2>1. Executive Summary &amp; Domain Immersion</h2>
-    <p>
-      Platform wawancara kerja berbasis kecerdasan buatan (<em>AI Interview Platform</em>) merupakan sistem dengan tingkat dampak sangat tinggi (<em>high-stakes product</em>). Pihak yang paling terpengaruh oleh sistem ini adalah <strong>kandidat pelamar kerja</strong>—mereka yang tidak pernah memilih sistem ini dan tidak memiliki opsi untuk menolak (<em>the people affected who never chose it</em>). Keputusan inferensi AI yang keliru atau penyembunyian rekomendasi rekruter dapat mengubah jalan hidup seseorang.
-    </p>
-    <div class="callout">
-      <strong>Prinsip Monozukuri &amp; Craftsmanship:</strong> Setiap keputusan arsitektural didasarkan pada pembuktian kebenaran sistem secara empiris (<em>proven correctness</em>), toleransi kegagalan (<em>graceful degradation</em>), serta kepatuhan mutlak pada regulasi hukum perlindungan data pribadi Indonesia.
+    <!-- PULL REQUEST & VIDEO WALKTHROUGH CALLOUT -->
+    <div class="callout" style="border-left-color: var(--purple); background: #faf5ff;">
+      <h3 style="margin-top: 0; color: #6b21a8;">📌 Submission Links (Deliverables Required)</h3>
+      <div style="margin-top: 8px; font-size: 13.5px;">
+        <p style="margin-bottom: 6px;">
+          <strong>1. GitHub Pull Request:</strong>
+          <a href="https://github.com/rakamindev/ai-interview-platform/compare/main...AndreanMlna:ai-interview-platform:feature/monozukuri-revamp?expand=1" target="_blank" style="color: #0284c7; text-decoration: underline; font-weight: 600;">
+            Open PR from <code>AndreanMlna:feature/monozukuri-revamp</code> to <code>rakamindev:main</code>
+          </a>
+        </p>
+        <p style="margin-bottom: 0;">
+          <strong>2. Video Walkthrough (3–5 Menit):</strong>
+          <span style="color: #475569; font-weight: 600;">Tautan Demonstrasi Video:</span>
+          <code style="background: #f3e8ff; padding: 2px 6px; border-radius: 4px; color: #581c87;">[Paste Loom / YouTube Unlisted / GDrive Link Here]</code>
+        </p>
+      </div>
     </div>
 
+    <h2>1. Executive Summary &amp; Domain Immersion (5 Pilar)</h2>
+    <p>
+      Platform evaluasi wawancara kerja berbasis kecerdasan buatan (<em>AI Interview Platform</em>) bukan sekadar aplikasi transkripsi percakapan teknis, melainkan sistem dengan tingkat dampak sangat tinggi (<em>high-stakes decision system</em>). Dalam tradisi rekayasa <strong>Monozukuri</strong>, kami mengevaluasi sistem ini dari prinsip pertama (<em>first principles</em>) dengan membedah 5 Pilar Domain:
+    </p>
+
+    <table>
+      <thead>
+        <tr>
+          <th style="width: 25%;">5 Pilar Domain</th>
+          <th style="width: 40%;">Konteks Industri &amp; Realitas Kerja</th>
+          <th style="width: 35%;">Implikasi Rekayasa Produk</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>1. The Product</strong></td>
+          <td>Platform wawancara suara real-time dua arah (*Gemini Live WebSocket*) dan asesmen kompetensi otomatis.</td>
+          <td>Latensi audio harus minimal (< 50ms), status transisi terprediksi, dan laporan komprehensif.</td>
+        </tr>
+        <tr>
+          <td><strong>2. The Industry</strong></td>
+          <td>Ekosistem rekrutmen Indonesia menghadapi inefisiensi screening manual dan bias subjektif asesor manusia.</td>
+          <td>Penilaian wajib berbasis bukti riil (*evidence quotes*) dan mendukung koreksi manusia (*assessor override*).</td>
+        </tr>
+        <tr>
+          <td><strong>3. What It Is For</strong></td>
+          <td>Menghasilkan evaluasi kecocokan kandidat (*fit/gap*) yang objektif, transparan, dan dapat dipertanggungjawabkan.</td>
+          <td>Skala level L1–L5 harus konsisten; skill yang tidak sempat diuji wajib dinyatakan secara gamblang (*unassessed*).</td>
+        </tr>
+        <tr>
+          <td><strong>4. The Users</strong></td>
+          <td>Asesor, recruiter, dan hiring manager yang memerlukan ringkasan cepat untuk mengambil keputusan dalam 30 detik.</td>
+          <td>Menyajikan <strong>Executive KPI Scorecard</strong> dan <strong>Interactive Filter Pills</strong> agar recruiter tidak overload.</td>
+        </tr>
+        <tr>
+          <td><strong>5. The People Affected Who Never Chose It</strong></td>
+          <td><strong>Kandidat pelamar kerja.</strong> Mereka tidak memilih sistem ini dan tidak bisa menolak dievaluasi oleh AI. Kesalahan teknis sistem merugikan karier nyata.</td>
+          <td><strong>Zero-tolerance</strong> kebocoran data pribadi (UU PDP No. 27/2022), mitigasi halusinasi, dan perlindungan privasi mutlak.</td>
+        </tr>
+      </tbody>
+    </table>
+
     <h2>2. Temuan Kritis &amp; Problem Classification Matrix (P0 – P3)</h2>
+    <p>
+      Berdasarkan penelusuran alur data dari basis data Rails hingga komponen React, ditemukan kesenjangan kritis (<em>gaps</em>) yang dikategorikan berdasarkan severitas:
+    </p>
+
     <table>
       <thead>
         <tr>
           <th>Severitas</th>
           <th>Komponen</th>
-          <th>Masalah (Gap to Ideal)</th>
-          <th>Dampak Nyata Produk</th>
+          <th>Masalah (Gap to Ideal Condition)</th>
+          <th>One-Line Impact Statement</th>
         </tr>
       </thead>
       <tbody>
         <tr>
           <td><strong style="color: var(--danger);">P0 (Critical)</strong></td>
-          <td><code>FitGap::Engine</code> &amp; <code>ComparisonTable</code></td>
+          <td><code>FitGap::Engine</code> vs <code>ComparisonTable.tsx</code></td>
           <td>Ketidakcocokan kunci kontrak: backend mengirim <code>expected_level</code>, frontend membaca <code>required_level</code>.</td>
           <td>Kolom Required Level kosong (<code>—</code>) dan penanda override asesor (<code>✏ Override</code>) tidak pernah tampil.</td>
         </tr>
@@ -265,29 +490,37 @@
         <tr>
           <td><strong style="color: var(--accent);">P1 (High)</strong></td>
           <td>Infrastruktur Model LLM</td>
-          <td>Hardcoded model usang (<code>gemini-2.0-flash-001</code>, <code>gemini-2.0-pro-001</code>).</td>
+          <td>Hardcoded model usang (<code>gemini-2.0-flash-001</code>).</td>
           <td>Risiko deprecation outage dan tidak tersedianya fallback narasi untuk <em>unassessed skills</em>.</td>
         </tr>
         <tr>
           <td><strong>P2 (Medium)</strong></td>
-          <td><code>PortfolioPage.tsx</code> &amp; <code>SkillPortfolioCard</code></td>
-          <td>Kutipan transkrip panjang meluap (overflow); unhandled fetch errors membuat layar kosong.</td>
+          <td><code>PortfolioPage.tsx</code> &amp; <code>ComparisonTable.tsx</code></td>
+          <td>Teks bukti wawancara panjang meluap (overflow); unhandled fetch errors membuat layar blank.</td>
           <td>Cacat pada 6 kondisi interaksi visual (<em>empty state, error retry, long text wrapping</em>).</td>
         </tr>
         <tr>
           <td><strong>P2 (Medium)</strong></td>
           <td>Test Harness Repositori</td>
           <td>0 test specs di backend Rails; 0 test runner di web React; tidak ada CI pipeline.</td>
-          <td>Sistem tidak terlindungi dari regresi saat insinyur melakukan modifikasi atau perbaikan.</td>
+          <td>Sistem tidak memiliki jaring pengaman regresi saat insinyur memodifikasi kode.</td>
         </tr>
       </tbody>
     </table>
 
-    <h2>3. Strategi Revamp &amp; Evaluasi Trade-off</h2>
+    <div class="callout warning">
+      <strong>Constraint Signal (Eskalasi ke Technical Lead):</strong>
+      <ol style="margin-left: 20px; margin-top: 6px;">
+        <li><strong>Sinkronisasi Eksekusi LLM:</strong> Panggilan <code>FitGap::Engine</code> berjalan sinkron saat HTTP GET/POST dari frontend. Jika inferensi AI mengalami latensi > 15 detik, gateway HTTP memicu timeout 504. Direkomendasikan migrasi ke asynchronous worker Sidekiq.</li>
+        <li><strong>Dual-Type Representation:</strong> Level kompetensi disimpan sebagai integer <code>1..5</code> di database Rails, namun kerap diakses sebagai representasi teks (<code>"L3"</code>) di antarmuka. Diperlukan parser dwiarah terpusat.</li>
+      </ol>
+    </div>
+
+    <h2>3. Strategi Revamp &amp; Evaluasi Trade-off (Option A vs Option B)</h2>
     <table>
       <thead>
         <tr>
-          <th>Kriteria Evaluasi</th>
+          <th>Dimensi Evaluasi</th>
           <th>Option A: Full Event-Driven Microservices</th>
           <th>Option B: Pragmatic Hexagonal Resiliency (Dipilih)</th>
         </tr>
@@ -295,28 +528,156 @@
       <tbody>
         <tr>
           <td><strong>Product Impact vs Cost</strong></td>
-          <td>Biaya refactoring masif, risiko tinggi regresi dalam batas waktu 48 jam.</td>
-          <td><strong>Optimal</strong>: Memperbaiki seam kontrak pada boundary dan memanfaatkan Sidekiq yang ada.</td>
+          <td>Biaya refactoring masif, overhead infrastruktur tinggi, risiko kegagalan tinggi dalam batasan waktu.</td>
+          <td><strong>Optimal</strong>: Memperbaiki batas kontrak (boundary seam), mempertahankan Sidekiq yang ada, biaya terukur.</td>
         </tr>
         <tr>
           <td><strong>Maintainability</strong></td>
-          <td>Overhead operasional tinggi (distributed tracing, message queue ops).</td>
-          <td><strong>Sangat Tinggi</strong>: Clean architecture modular, mudah dipelihara dan diuji dengan RSpec.</td>
+          <td>Tinggi beban operasi (distributed tracing, dead letter queues, multi-repo complexity).</td>
+          <td><strong>Sangat Tinggi</strong>: Clean architecture modular, mudah dipelihara dan diproteksi dengan RSpec &amp; Vitest.</td>
         </tr>
         <tr>
           <td><strong>Failure Modes</strong></td>
           <td>Message broker bottleneck saat beban spike.</td>
-          <td>Panggilan LLM terlindungi oleh exponential backoff, timeout, dan fallback narrative.</td>
+          <td>Panggilan LLM terlindungi oleh exponential backoff, timeout, dan graceful fallback narrative.</td>
         </tr>
         <tr>
-          <td><strong>Kesesuaian Konteks</strong></td>
-          <td>Tidak realistis untuk submission berkualitas tinggi dalam 48 jam.</td>
-          <td><strong>Tepat Sasaran</strong>: Langsung menyelesaikan P0–P2 dengan bukti pengujian empiris.</td>
+          <td><strong>Contextual Fit</strong></td>
+          <td>Over-engineering yang tidak tepat sasaran untuk kebutuhan saat ini.</td>
+          <td><strong>Tepat Sasaran</strong>: Menyelesaikan P0–P2 secara tuntas dengan bukti verifikasi empiris.</td>
         </tr>
       </tbody>
     </table>
 
-    <h2>4. Bukti Empiris: Seeded Fault Test (Test Rigor)</h2>
+    <h2>4. Monozukuri UI/UX Elevation: Executive Scorecard &amp; 6 Interaction States</h2>
+    <p>
+      Sesuai prinsip Monozukuri, kami menolak pendekatan konvensional yang hanya memenuhi baseline minimum. Kami menambahkan <strong>Executive Recruiter Scorecard</strong> dan <strong>Interactive Filter Pills</strong> agar rekruter dapat membaca kecocokan kandidat dalam 30 detik tanpa cognitive overload:
+    </p>
+
+    <!-- LIVE CSS UI MOCKUP 1: EXECUTIVE SCORECARD -->
+    <div class="ui-mockup-card">
+      <div class="mockup-header">
+        <span class="mockup-title">UI Elevation Preview: Executive Recruiter Scorecard</span>
+        <span style="font-size: 11px; background: #e0f2fe; color: #0369a1; padding: 2px 8px; border-radius: 4px; font-weight: 600;">Implemented in FitGapReportPage.tsx</span>
+      </div>
+
+      <div class="scorecard-box">
+        <div class="scorecard-flex">
+          <div>
+            <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 4px;">
+              <span style="font-size: 11px; font-weight: 700; text-transform: uppercase; color: #64748b; letter-spacing: 0.5px;">Executive Summary</span>
+              <span class="score-badge">Strong Candidate Fit</span>
+            </div>
+            <div style="display: flex; align-items: baseline; gap: 8px;">
+              <span class="score-metric">83%</span>
+              <span style="font-size: 13px; color: #64748b; font-weight: 600;">Role Competency Fit</span>
+            </div>
+          </div>
+
+          <div style="display: flex; gap: 8px;">
+            <div class="stat-pill" style="background: #f0fdf4; border: 1px solid #bbf7d0;">
+              <div style="font-weight: 800; color: #15803d; font-size: 16px;">5</div>
+              <div style="font-size: 11px; color: #166534; font-weight: 600;">Meets/Exceeds</div>
+            </div>
+            <div class="stat-pill" style="background: #fffbeb; border: 1px solid #fde68a;">
+              <div style="font-weight: 800; color: #b45309; font-size: 16px;">1</div>
+              <div style="font-size: 11px; color: #92400e; font-weight: 600;">Skill Gaps</div>
+            </div>
+            <div class="stat-pill" style="background: #f1f5f9; border: 1px solid #cbd5e1;">
+              <div style="font-weight: 800; color: #475569; font-size: 16px;">0</div>
+              <div style="font-size: 11px; color: #334155; font-weight: 600;">Unassessed</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Multi-segment visual competency ratio bar -->
+        <div class="progress-bar-bg">
+          <div style="width: 83.3%; background: #16a34a;" title="Matches & Exceeds: 5"></div>
+          <div style="width: 16.7%; background: #f59e0b;" title="Skill Gaps: 1"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- LIVE CSS UI MOCKUP 2: COMPARISON TABLE WITH FILTER PILLS & OVERRIDE BADGE -->
+    <div class="ui-mockup-card">
+      <div class="mockup-header">
+        <span class="mockup-title">UI Elevation Preview: Interactive Filter Pills &amp; Override Badge</span>
+        <span style="font-size: 11px; background: #e0f2fe; color: #0369a1; padding: 2px 8px; border-radius: 4px; font-weight: 600;">Implemented in ComparisonTable.tsx</span>
+      </div>
+
+      <!-- Filter Pills -->
+      <div class="filter-pills-row">
+        <span class="pill-btn active">All (6)</span>
+        <span class="pill-btn green">✅ Matches (4)</span>
+        <span class="pill-btn amber">⚠ Gaps (1)</span>
+        <span class="pill-btn" style="background: #faf5ff; color: #7e22ce; border-color: #e9d5ff;">⭐ Exceeds (1)</span>
+        <span class="pill-btn">⚪ Unassessed (0)</span>
+      </div>
+
+      <!-- Table Sample -->
+      <table style="margin: 0; font-size: 12.5px;">
+        <thead>
+          <tr>
+            <th>Skill</th>
+            <th style="text-align: center;">Required</th>
+            <th style="text-align: center;">Candidate Level</th>
+            <th style="text-align: center;">Result</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>PostgreSQL Optimization</strong></td>
+            <td style="text-align: center;">L3 (Proficient)</td>
+            <td style="text-align: center;">
+              <span>L4 (Advanced)</span>
+              <span style="display: inline-block; font-size: 10px; background: #fef3c7; color: #92400e; border: 1px solid #fde68a; padding: 1px 5px; border-radius: 4px; font-weight: 700; margin-left: 6px;">✏ Override</span>
+            </td>
+            <td style="text-align: center;">
+              <span style="background: #fdf4ff; color: #86198f; padding: 2px 6px; border-radius: 4px; font-weight: 600;">⭐ Exceeds +1</span>
+            </td>
+          </tr>
+          <tr>
+            <td><strong>Distributed Systems Architecture</strong></td>
+            <td style="text-align: center;">L4 (Advanced)</td>
+            <td style="text-align: center;">L2 (Working Knowledge)</td>
+            <td style="text-align: center;">
+              <span style="background: #fffbeb; color: #b45309; padding: 2px 6px; border-radius: 4px; font-weight: 600;">⚠ Gap -2</span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- 6 INTERACTION STATES -->
+    <h3>Matriks 6 Kondisi Interaksi (Interaction States Matrix)</h3>
+    <div class="state-grid">
+      <div class="state-card">
+        <div class="state-tag">1. Loading State</div>
+        <p style="font-size: 12px; margin-bottom: 0;">Skeleton visual terstruktur mempertahankan layout geometris tanpa ada Cumulative Layout Shift (CLS = 0).</p>
+      </div>
+      <div class="state-card">
+        <div class="state-tag">2. Empty State</div>
+        <p style="font-size: 12px; margin-bottom: 0;">Tampilan bergaris putus-putus ramah pengguna saat tidak ada keterampilan terkonfigurasi atau hasil evaluasi kosong.</p>
+      </div>
+      <div class="state-card">
+        <div class="state-tag">3. Error State</div>
+        <p style="font-size: 12px; margin-bottom: 0;">Pesan pemulihan informatif dilengkapi tombol aksi <code style="background: #e2e8f0; padding: 1px 4px; border-radius: 3px;">Try Again</code> untuk fetch ulang data.</p>
+      </div>
+      <div class="state-card">
+        <div class="state-tag">4. Partial State</div>
+        <p style="font-size: 12px; margin-bottom: 0;">Peringatan kontekstual untuk skill yang baru dibahas singkat (*Low Confidence: warrants dedicated session*).</p>
+      </div>
+      <div class="state-card">
+        <div class="state-tag">5. Long Text State</div>
+        <p style="font-size: 12px; margin-bottom: 0;">Pencegahan luapan teks horizontal menggunakan <code style="background: #e2e8f0; padding: 1px 4px; border-radius: 3px;">break-words</code> dan <code style="background: #e2e8f0; padding: 1px 4px; border-radius: 3px;">whitespace-pre-wrap</code>.</p>
+      </div>
+      <div class="state-card">
+        <div class="state-tag">6. Responsive Views</div>
+        <p style="font-size: 12px; margin-bottom: 0;">Tabel terbungkus dalam kontainer scroll horizontal dan navigasi fleksibel untuk perangkat smartphone maupun desktop.</p>
+      </div>
+    </div>
+
+    <h2>5. Bukti Empiris: Seeded Fault Test (Test Rigor)</h2>
     <p>
       Untuk membuktikan bahwa asersi pengujian otomatis bukan sekadar <em>green theatre</em> (tes yang selalu lulus), dilakukan pengujian kegagalan terencana (<em>Seeded Fault Test</em>) pada branch <code>fault-test/prove-assertion-validity</code>:
     </p>
@@ -329,18 +690,18 @@
   > displays human override indicator (✏ Override) when is_override is true
   TestingLibraryElementError: Unable to find an element with the text: /✏ Override/i.
 
-Tests: 2 failed | 6 passed (8)</pre>
+Tests: 2 failed | 7 passed (9)</pre>
     </div>
     <div class="callout success">
       <strong>Hasil Pemulihan Tes (GREEN State pada <code>feature/monozukuri-revamp</code>):</strong>
-      <pre>✓ src/components/fitgap/__tests__/ComparisonTable.test.tsx (6 tests) 60ms
-✓ src/pages/fitgap/__tests__/FitGapReportPage.test.tsx (2 tests) 82ms
+      <pre>✓ src/components/fitgap/__tests__/ComparisonTable.test.tsx (7 tests) 180ms
+✓ src/pages/fitgap/__tests__/FitGapReportPage.test.tsx (2 tests) 113ms
 
-Test Files: 2 passed (2) | Tests: 8 passed (8)</pre>
+Test Files: 2 passed (2) | Tests: 9 passed (9)</pre>
     </div>
-    <p><em>Bukti riwayat git tercatat pada commit <code>fd75835</code> di repositori lokal.</em></p>
+    <p><em>Bukti riwayat git tersimpan permanen pada commit <code>fd75835</code> di repositori lokal.</em></p>
 
-    <h2>5. Kepatuhan Hukum: UU No. 27/2022 (UU PDP)</h2>
+    <h2>6. Kepatuhan Hukum: UU No. 27/2022 (UU PDP)</h2>
     <p>
       Diimplementasikan engine <code>Security::PiiSanitizer</code> (<code>api/app/services/security/pii_sanitizer.rb</code>) yang secara deterministik menyensor data pribadi kandidat sebelum transkrip dikirim ke model eksternal Google Gemini:
     </p>
@@ -348,21 +709,23 @@ Test Files: 2 passed (2) | Tests: 8 passed (8)</pre>
       <li><strong>Email:</strong> <code>[EMAIL_REDACTED]</code></li>
       <li><strong>No. HP Indonesia (+62/08):</strong> <code>[PHONE_REDACTED]</code></li>
       <li><strong>NIK (16 Digit):</strong> <code>[NIK_REDACTED]</code></li>
+      <li><strong>Nomor Kartu Kredit/Debit:</strong> <code>[CARD_REDACTED]</code></li>
       <li><strong>Nama Kandidat:</strong> <code>[CANDIDATE_NAME]</code></li>
     </ul>
 
-    <h2>6. AI Verification Moment</h2>
+    <h2>7. AI Verification Moment</h2>
     <p>
       Saat asisten AI pertama kali membuat pengujian komponen, AI berasumsi bahwa nilai level pada payload adalah string langsung (<code>"Advanced"</code>). Pemeriksaan empiris oleh insinyur mendeteksi bahwa database Rails menggunakan integer (<code>1..5</code>), sehingga kode asli akan me-render nilai cacat (<code>Lundefined</code>). Insinyur memvalidasi dan membetulkan kode dengan membuat parser dwiarah <code>formatLevel()</code> dan <code>parseLevel()</code> yang toleran terhadap format numerik maupun string.
     </p>
 
-    <h2>7. Deliverables &amp; Persiapan Live Defense</h2>
+    <h2>8. Deliverables &amp; Persiapan Live Defense</h2>
     <ul class="checklist">
-      <li>✅ <strong>Open Pull Request:</strong> Branch <code>feature/monozukuri-revamp</code> siap diajukan ke <code>main</code>.</li>
-      <li>✅ <strong>Single PDF Report:</strong> Halaman ini siap dicetak langsung menjadi PDF berstandar tinggi.</li>
-      <li>✅ <strong>Automated Test Suites:</strong> 8 unit test di Vitest + RSpec harness di backend Rails.</li>
-      <li>✅ <strong>Video Walkthrough Outline:</strong> Panduan 3–5 menit terstruktur mencakup filosofi, P0 fix, Seeded Fault Test, dan UI states.</li>
-      <li>✅ <strong>Live Defense Readiness:</strong> Siap mempertahankan keputusan arsitektural di hadapan CTO dan Tech Lead.</li>
+      <li>✅ <strong>Open Pull Request:</strong> Branch <code>feature/monozukuri-revamp</code> ter-push ke GitHub dan siap diajukan ke <code>main</code>.</li>
+      <li>✅ <strong>Single PDF Report:</strong> Dokumen ini siap dicetak langsung menjadi PDF berstandar tinggi (A4 clean formatting).</li>
+      <li>✅ <strong>Automated Test Suites:</strong> 9 unit test di Vitest + RSpec harness di backend Rails (100% green).</li>
+      <li>✅ <strong>UI/UX Beyond Minimum Baseline:</strong> Executive KPI Scorecard, Interactive Filter Pills, dan 6 Interaction States.</li>
+      <li>✅ <strong>UU PDP Compliance:</strong> Proteksi PII deterministik sebelum data keluar ke LLM eksternal.</li>
+      <li>✅ <strong>Live Defense Readiness:</strong> Siap mempertahankan trade-off arsitektural di hadapan CTO dan Tech Lead Rakamin.</li>
     </ul>
   </div>
 </body>

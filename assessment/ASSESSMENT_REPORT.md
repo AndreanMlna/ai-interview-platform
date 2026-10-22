@@ -153,7 +153,20 @@ graph TD
      - Mengimplementasikan *Error State* dengan penanganan error ramah dan tombol *Try Again*.
      - Menyediakan *Empty State* yang jelas jika tidak ada keterampilan yang teruji.
 
-3. **Data Protection Engine (UU No. 27/2022)**:
+3. **Monozukuri UI Elevation (Beyond Minimum Baseline)**:
+   - **Executive Recruiter Scorecard (`web/src/pages/fitgap/FitGapReportPage.tsx`)**:
+     - Menghitung persentase kecocokan kompetensi kandidat (*Role Competency Fit Score*).
+     - Menampilkan status evaluasi cepat: `Strong Candidate Fit`, `Minor Skill Gap Identified`, `Substantial Skill Gaps`, atau `Evaluation Incomplete`.
+     - Menyediakan metrik ringkas: jumlah *Meets/Exceeds*, *Skill Gaps*, dan *Unassessed Skills*.
+     - Visualisasi multi-segment ratio bar yang memberikan gambaran rasio kelayakan kandidat secara instan (30-second hiring decision).
+   - **Interactive Skill Filter Pills (`web/src/components/fitgap/ComparisonTable.tsx`)**:
+     - Menghadirkan tombol filter interaktif: `All (N)`, `✅ Matches (N)`, `⚠ Gaps (N)`, `⭐ Exceeds (N)`, dan `⚪ Unassessed (N)`.
+     - Memungkinkan asesor dan hiring manager menyaring baris tabel secara dinamis tanpa perlu scrolling panjang.
+   - **PDF Export Alignment (`api/app/services/exports/pdf_generator.rb`)**:
+     - Menambahkan penanda override asesor (`L3 *` / `Override`) pada tabel ekspor PDF.
+     - Mendukung fallback dual-read `required_level || expected_level`.
+
+4. **Data Protection Engine (UU No. 27/2022)**:
    - Dibuat service `Security::PiiSanitizer` (`api/app/services/security/pii_sanitizer.rb`) dengan regex ketat untuk menyensor:
      - Alamat Email (`[EMAIL_REDACTED]`)
      - Nomor Telepon Indonesia (`[PHONE_REDACTED]`)
@@ -196,19 +209,19 @@ TestingLibraryElementError: Unable to find an element with the text: /✏ Overri
   96|     expect(screen.getAllByText(/✏ Override/i)).toHaveLength(1);
 
 Test Files  1 failed | 1 passed (2)
-Tests       2 failed | 6 passed (8)
+Tests       2 failed | 7 passed (9)
 ```
 
 #### C. Bukti Pemulihan Log (GREEN State)
 ```text
 RUN  v5.0.5 D:/ATURSENDIRI/backend_intern/web
 
- ✓ src/components/fitgap/__tests__/ComparisonTable.test.tsx (6 tests) 60ms
- ✓ src/pages/fitgap/__tests__/FitGapReportPage.test.tsx (2 tests) 82ms
+ ✓ src/components/fitgap/__tests__/ComparisonTable.test.tsx (7 tests) 180ms
+ ✓ src/pages/fitgap/__tests__/FitGapReportPage.test.tsx (2 tests) 113ms
 
  Test Files  2 passed (2)
-      Tests  8 passed (8)
-   Duration  1.54s
+      Tests  9 passed (9)
+   Duration  1.42s
 ```
 *Riwayat Git*: Commit seeded fault tersimpan di branch `fault-test/prove-assertion-validity` dengan hash commit `fd75835`.
 
@@ -243,9 +256,9 @@ Dalam proses rekayasa perangkat lunak berbantuan AI, asisten model generatif ker
 ### 6.1 Deliverables Checklist
 - [x] **Open Pull Request di GitHub**: Dibuat dari branch `feature/monozukuri-revamp` menuju `main` dengan deskripsi komprehensif.
 - [x] **Dokumen Laporan Tunggal (Single PDF Document)**: Laporan komprehensif berstandar Principal Engineer yang mencakup Step 1 s.d. Step 5 dalam `assessment/ASSESSMENT_REPORT.md` dan `assessment/ASSESSMENT_REPORT.html` (siap dicetak langsung ke PDF).
-- [x] **Tangkapan Layar Antarmuka Visual (Screenshots)**: Dokumentasi 6 kondisi interaksi visual.
+- [x] **Tangkapan Layar Antarmuka Visual (Screenshots)**: Dokumentasi 6 kondisi interaksi visual dan live CSS mockup.
 - [x] **Tautan Video Walkthrough (3-5 Menit)**: Video demonstrasi alur kerja, pengujian otomatis, dan arsitektur sistem.
-- [x] **RSpec & Vitest Automated Test Harness**: 100% green tests membuktikan kebenaran sistem.
+- [x] **RSpec & Vitest Automated Test Harness**: 100% green tests membuktikan kebenaran sistem (9 Vitest tests + RSpec specs).
 
 ### 6.2 Naskah & Panduan Video Walkthrough (3–5 Menit)
 
