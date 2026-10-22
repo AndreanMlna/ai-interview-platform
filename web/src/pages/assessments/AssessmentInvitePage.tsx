@@ -15,8 +15,19 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { assessmentsApi } from "@/services/assessments";
 import { LEVEL_LABELS } from "@/utils/constants";
-import { ArrowLeft, Copy, Check, Eye, Pencil, Clock, Plus, UserRound } from "lucide-react";
+import { ArrowLeft, Copy, Check, Eye, Pencil, Clock, Plus, UserRound, ExternalLink } from "lucide-react";
 import type { Assessment, Session } from "@/types";
+
+export function resolveInviteUrl(inviteUrl?: string, token?: string): string {
+  if (token) {
+    return `${window.location.origin}/interview/${token}`;
+  }
+  if (!inviteUrl) return "";
+  if (inviteUrl.includes(":3001/interview/")) {
+    return inviteUrl.replace(/https?:\/\/[^/]+:3001/, window.location.origin);
+  }
+  return inviteUrl;
+}
 
 function SessionRow({
   session,
@@ -81,18 +92,35 @@ function SessionRow({
 
         <div className="flex items-center gap-1.5">
           {isPending && (
-            <Button
-              variant="ghost"
-              size="sm"
-              className="h-7 px-2 text-xs"
-              onClick={() => onCopy(session.id)}
-            >
-              {copiedId === session.id ? (
-                <><Check className="h-3 w-3 mr-1" /> Copied</>
-              ) : (
-                <><Copy className="h-3 w-3 mr-1" /> Copy link</>
-              )}
-            </Button>
+            <>
+              <Button
+                variant="ghost"
+                size="sm"
+                className="h-7 px-2 text-xs"
+                onClick={() => onCopy(session.id)}
+              >
+                {copiedId === session.id ? (
+                  <><Check className="h-3 w-3 mr-1 text-emerald-600" /> Copied</>
+                ) : (
+                  <><Copy className="h-3 w-3 mr-1" /> Copy link</>
+                )}
+              </Button>
+              <Button
+                variant="ghost"
+                size="icon"
+                className="h-7 w-7 text-muted-foreground hover:text-foreground"
+                asChild
+                title="Open candidate link"
+              >
+                <a
+                  href={resolveInviteUrl(session.invite_url, session.invite_token)}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <ExternalLink className="h-3.5 w-3.5" />
+                </a>
+              </Button>
+            </>
           )}
           {isLive && (
             <Button
@@ -176,14 +204,16 @@ export default function AssessmentInvitePage() {
   };
 
   const copyLink = (session: Session, id: number) => {
-    navigator.clipboard.writeText(session.invite_url);
+    const url = resolveInviteUrl(session.invite_url, session.invite_token);
+    navigator.clipboard.writeText(url);
     setCopiedId(id);
     setTimeout(() => setCopiedId(null), 2000);
   };
 
   const copyNewSessionLink = () => {
-    if (!newSession?.invite_url) return;
-    navigator.clipboard.writeText(newSession.invite_url);
+    const url = resolveInviteUrl(newSession?.invite_url, newSession?.invite_token);
+    if (!url) return;
+    navigator.clipboard.writeText(url);
     setNewSessionCopied(true);
     setTimeout(() => setNewSessionCopied(false), 2000);
   };
@@ -261,17 +291,38 @@ export default function AssessmentInvitePage() {
                 : <>New invite link ready — share with your candidate:</>}
             </p>
             <div className="flex items-center gap-2 border rounded-md px-3 py-2 bg-white">
-              <span className="flex-1 text-sm font-mono truncate text-muted-foreground">
-                {newSession.invite_url}
-              </span>
+              <a
+                href={resolveInviteUrl(newSession.invite_url, newSession.invite_token)}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex-1 text-sm font-mono truncate text-primary hover:underline"
+              >
+                {resolveInviteUrl(newSession.invite_url, newSession.invite_token)}
+              </a>
             </div>
-            <Button variant="outline" size="sm" onClick={copyNewSessionLink} className="w-full">
-              {newSessionCopied ? (
-                <><Check className="h-3.5 w-3.5 mr-1.5" /> Copied!</>
-              ) : (
-                <><Copy className="h-3.5 w-3.5 mr-1.5" /> Copy link</>
-              )}
-            </Button>
+            <div className="flex items-center gap-2">
+              <Button variant="outline" size="sm" onClick={copyNewSessionLink} className="flex-1">
+                {newSessionCopied ? (
+                  <><Check className="h-3.5 w-3.5 mr-1.5" /> Copied!</>
+                ) : (
+                  <><Copy className="h-3.5 w-3.5 mr-1.5" /> Copy link</>
+                )}
+              </Button>
+              <Button
+                variant="secondary"
+                size="sm"
+                asChild
+                className="shrink-0"
+              >
+                <a
+                  href={resolveInviteUrl(newSession.invite_url, newSession.invite_token)}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <ExternalLink className="h-3.5 w-3.5 mr-1.5" /> Open
+                </a>
+              </Button>
+            </div>
           </CardContent>
         </Card>
       )}

@@ -3,6 +3,16 @@
 Rails.application.routes.draw do
   get '/health', to: proc { [200, {}, [{ status: 'ok' }.to_json]] }
 
+  # Defensive fallback: redirect direct candidate hits on Rails port to Vite frontend
+  get '/interview/:token', to: redirect { |params, _req|
+    token = params[:token].to_s.gsub(/[^a-zA-Z0-9_-]/, '')
+    client_base = ENV['CLIENT_URL'].presence ||
+                  ENV['FRONTEND_URL'].presence ||
+                  (ENV['APP_BASE_URL'].presence unless ENV['APP_BASE_URL']&.include?('3001')) ||
+                  'http://localhost:5173'
+    "#{client_base.to_s.chomp('/')}/interview/#{token}"
+  }
+
   namespace :api do
     namespace :v1 do
       # Auth
