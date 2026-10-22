@@ -48,16 +48,21 @@ const HardwareCheck: React.FC<HardwareCheckProps> = ({ onStart }) => {
     const [audioLevel, setAudioLevel] = useState<number>(0);
     const videoRef = useRef<HTMLVideoElement>(null);
 
+    const essentialHardwarePassed =
+        progress.osAndBrowser === ProctoringState.PASSED &&
+        (REQUIRE_CAMERA ? progress.camera === ProctoringState.PASSED : true) &&
+        progress.microphone === ProctoringState.PASSED &&
+        progress.audio === ProctoringState.PASSED;
+
+    const allStrictPassed = essentialHardwarePassed && progress.internet === ProctoringState.PASSED;
+    const isChecking = Object.values(progress).some(
+        (s) => s === ProctoringState.LOADING || s === ProctoringState.WAITING
+    );
+    const canStart = allStrictPassed || (essentialHardwarePassed && !isChecking);
+
     useEffect(() => {
-        const { osAndBrowser, internet, camera, audio, microphone } = progress;
-        setAllPassed(
-            osAndBrowser === ProctoringState.PASSED &&
-            internet === ProctoringState.PASSED &&
-            camera === ProctoringState.PASSED &&
-            audio === ProctoringState.PASSED &&
-            microphone === ProctoringState.PASSED
-        );
-    }, [progress]);
+        setAllPassed(allStrictPassed);
+    }, [allStrictPassed]);
 
     useEffect(() => {
         if (videoRef.current && videoStream) videoRef.current.srcObject = videoStream;
@@ -125,11 +130,9 @@ const HardwareCheck: React.FC<HardwareCheckProps> = ({ onStart }) => {
             setProgress((p) => ({
                 ...p,
                 internet: result.passed ? ProctoringState.PASSED : ProctoringState.ERROR,
-                ...(result.passed
-                    ? REQUIRE_CAMERA
-                        ? { camera: ProctoringState.LOADING }
-                        : { camera: ProctoringState.PASSED, microphone: ProctoringState.LOADING }
-                    : {}),
+                ...(REQUIRE_CAMERA
+                    ? { camera: ProctoringState.LOADING }
+                    : { camera: ProctoringState.PASSED, microphone: ProctoringState.LOADING }),
             }));
         });
     }, [progress.internet]);
@@ -270,6 +273,15 @@ const HardwareCheck: React.FC<HardwareCheckProps> = ({ onStart }) => {
                 ))}
             </div>
 
+            {/* Advisory when internet is degraded but mic & audio are working */}
+            {progress.internet === ProctoringState.ERROR && essentialHardwarePassed && !isChecking && (
+                <div className="mx-4 my-2.5 px-3 py-2 rounded-md bg-amber-500/10 border border-amber-500/20 text-xs text-amber-700 flex items-start gap-2">
+                    <span>
+                        Kecepatan internet terdeteksi lambat, namun mikrofon dan audio Anda berfungsi baik. Anda dapat mencoba mengulang (<strong>Retry</strong>) atau tetap melanjutkan wawancara.
+                    </span>
+                </div>
+            )}
+
             {/* Footer */}
             <div className="px-4 py-3 border-t flex items-center justify-between gap-3 bg-muted/30">
                 {hasError && (
@@ -281,10 +293,11 @@ const HardwareCheck: React.FC<HardwareCheckProps> = ({ onStart }) => {
                 <Button
                     size="sm"
                     className="ml-auto"
-                    disabled={!allPassed}
+                    disabled={!canStart}
                     onClick={onStart}
+                    variant={allStrictPassed ? "default" : "secondary"}
                 >
-                    Start Interview
+                    {allStrictPassed ? "Start Interview" : "Proceed Anyway"}
                 </Button>
             </div>
         </div>

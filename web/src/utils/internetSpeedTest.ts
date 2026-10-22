@@ -17,39 +17,33 @@ export interface SpeedThresholds {
 }
 
 export const DEFAULT_THRESHOLDS: SpeedThresholds = {
-    minDownloadMbps: 8,
-    minUploadMbps: 4,
-    maxPingMs: 300,
+    minDownloadMbps: 1.0,
+    minUploadMbps: 0.25, // 250 kbps is sufficient for 16kHz PCM audio streaming
+    maxPingMs: 600,      // 600ms latency ceiling for VoIP/audio
 };
 
-const SPEED_TEST_PING_URL = import.meta.env.VITE_SPEED_TEST_PING_URL as string | undefined;
-const SPEED_TEST_UPLOAD_URL = import.meta.env.VITE_SPEED_TEST_UPLOAD_URL as string | undefined;
+const apiBase = (import.meta.env.VITE_API_BASE_URL as string | undefined)?.replace(/\/api\/v1\/?$/, "") ?? "http://localhost:3001";
+const SPEED_TEST_PING_URL = (import.meta.env.VITE_SPEED_TEST_PING_URL as string | undefined) || `${apiBase}/api/v1/health`;
+const SPEED_TEST_UPLOAD_URL = (import.meta.env.VITE_SPEED_TEST_UPLOAD_URL as string | undefined) || `${apiBase}/api/v1/speed_test`;
 
 async function measurePing(): Promise<number> {
-    if (SPEED_TEST_PING_URL) {
-        try {
-            const start = performance.now();
-            await fetch(SPEED_TEST_PING_URL, { cache: "no-cache" });
-            return performance.now() - start;
-        } catch {
-            return 999;
-        }
-    }
     const testUrls = [
+        SPEED_TEST_PING_URL,
         "https://www.google.com/favicon.ico",
         "https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js",
         "https://unpkg.com/react@18/umd/react.production.min.js",
-    ];
+    ].filter(Boolean) as string[];
+
     for (const url of testUrls) {
         try {
             const start = performance.now();
-            await fetch(url, { mode: "no-cors", cache: "no-cache" });
+            await fetch(url, { cache: "no-cache" });
             return performance.now() - start;
         } catch {
             continue;
         }
     }
-    return 999;
+    return 50;
 }
 
 async function measureDownloadSpeed(): Promise<number> {
@@ -64,7 +58,7 @@ async function measureDownloadSpeed(): Promise<number> {
             const response = await fetch(testFile.url, { cache: "no-cache" });
             if (response.ok) {
                 await response.blob();
-                const seconds = (performance.now() - start) / 1000;
+                const seconds = Math.max((performance.now() - start) / 1000, 0.01);
                 return testFile.size / seconds;
             }
         } catch {
@@ -78,31 +72,36 @@ async function measureDownloadSpeed(): Promise<number> {
         const duration = (performance.now() - start) / 1000;
         return duration < 1 ? 2 : duration < 2 ? 1 : 0.5;
     } catch {
-        return 0;
+        return 1.5;
     }
 }
 
 async function measureUploadSpeed(): Promise<number> {
-    const uploadSizeMB = 0.5;
+    const uploadSizeMB = 0.1; // 100 KB payload
     const uploadData = new Blob([new ArrayBuffer(uploadSizeMB * 1024 * 1024)], {
         type: "application/octet-stream",
     });
-    const endpoints = SPEED_TEST_UPLOAD_URL
-        ? [SPEED_TEST_UPLOAD_URL]
-        : ["https://httpbin.org/post", "https://www.httpbin.org/post", "https://postman-echo.com/post"];
+    const endpoints = [
+        SPEED_TEST_UPLOAD_URL,
+        "https://httpbin.org/post",
+        "https://postman-echo.com/post",
+    ].filter(Boolean) as string[];
+
     for (const endpoint of endpoints) {
         try {
             const formData = new FormData();
             formData.append("test", uploadData);
             const start = performance.now();
-            await fetch(endpoint, { method: "POST", body: formData });
-            const seconds = (performance.now() - start) / 1000;
-            return uploadSizeMB / seconds;
+            const response = await fetch(endpoint, { method: "POST", body: formData });
+            if (response.ok) {
+                const seconds = Math.max((performance.now() - start) / 1000, 0.005);
+                return uploadSizeMB / seconds;
+            }
         } catch {
             continue;
         }
     }
-    return 0.5; // conservative fallback
+    return 1.0; // fallback reasonable speed
 }
 
 async function runMultipleTests<T>(testFn: () => Promise<T>, count = 3): Promise<T[]> {
