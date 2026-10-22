@@ -38,6 +38,7 @@ export default function InterviewPage() {
   const connectionLostTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const [micMuted, setMicMuted] = useState(false);
   const micMutedRef = useRef(false);
+  const [terminationError, setTerminationError] = useState<string | null>(null);
 
   // Fetch candidate info
   useEffect(() => {
@@ -138,6 +139,7 @@ export default function InterviewPage() {
     onStateChange: handleStateChange,
     onSpeakerChange: handleSpeakerChange,
     onReconnected: handleReconnected,
+    onError: (msg) => setTerminationError(msg),
   });
 
   const { start: startCapture, stop: stopCapture, mute, unmute } = useAudioCapture({
@@ -228,14 +230,28 @@ export default function InterviewPage() {
 
   // ── State F: Complete ───────────────────────────────────────────────────
   if (interviewState === "complete") {
+    const isInterrupted = candidateInfo?.end_reason === "error" || Boolean(terminationError);
+
     return (
       <div className="max-w-xl mx-auto px-4 py-16 text-center space-y-4">
-        <div className="text-4xl">✅</div>
-        <h2 className="text-xl font-semibold">Interview Complete</h2>
-        <p className="text-sm text-muted-foreground">
-          Thank you. The interview has been recorded.
-          <br />
-          The hiring team will review your results and follow up with you.
+        <div className="text-4xl">{isInterrupted ? "⚠️" : "✅"}</div>
+        <h2 className="text-xl font-semibold">
+          {isInterrupted ? "Sesi Wawancara Terputus" : "Interview Complete"}
+        </h2>
+        <p className="text-sm text-muted-foreground leading-relaxed">
+          {isInterrupted ? (
+            <>
+              {terminationError || "Koneksi wawancara ini terputus karena kendala teknis pada sistem."}
+              <br />
+              Silakan hubungi tim rekruter atau asesor Anda untuk meminta link wawancara baru.
+            </>
+          ) : (
+            <>
+              Thank you. The interview has been recorded.
+              <br />
+              The hiring team will review your results and follow up with you.
+            </>
+          )}
         </p>
       </div>
     );

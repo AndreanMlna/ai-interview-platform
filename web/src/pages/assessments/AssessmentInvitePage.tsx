@@ -15,7 +15,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { assessmentsApi } from "@/services/assessments";
 import { LEVEL_LABELS } from "@/utils/constants";
-import { ArrowLeft, Copy, Check, Eye, Pencil, Clock, Plus, UserRound, ExternalLink } from "lucide-react";
+import { ArrowLeft, Copy, Check, Eye, Pencil, Clock, Plus, UserRound, ExternalLink, RotateCcw } from "lucide-react";
 import type { Assessment, Session } from "@/types";
 
 export function resolveInviteUrl(inviteUrl?: string, token?: string): string {
@@ -35,12 +35,14 @@ function SessionRow({
   assessmentId,
   onCopy,
   copiedId,
+  onReinvite,
 }: {
   session: Session;
   index: number;
   assessmentId: string;
   onCopy: (id: number) => void;
   copiedId: number | null;
+  onReinvite?: (candidateName?: string) => void;
 }) {
   const navigate = useNavigate();
   const isLive = session.status === "active";
@@ -78,13 +80,13 @@ function SessionRow({
           </span>
         )}
         {isEnded && session.end_reason === "error" && (
-          <span className="flex items-center gap-1 text-xs text-destructive">
-            <span className="w-1.5 h-1.5 rounded-full bg-destructive" />
-            Failed
+          <span className="flex items-center gap-1 text-xs text-amber-600 font-medium">
+            <span className="w-1.5 h-1.5 rounded-full bg-amber-500" />
+            Interrupted
           </span>
         )}
         {isEnded && session.end_reason !== "error" && (
-          <span className="flex items-center gap-1 text-xs text-green-600">
+          <span className="flex items-center gap-1 text-xs text-green-600 font-medium">
             <span className="w-1.5 h-1.5 rounded-full bg-green-500" />
             Completed
           </span>
@@ -132,15 +134,28 @@ function SessionRow({
               <Eye className="h-3 w-3 mr-1" /> Monitor
             </Button>
           )}
-          {isEnded && session.end_reason !== "error" && (
-            <Button
-              variant="outline"
-              size="sm"
-              className="h-7 px-2 text-xs"
-              onClick={() => navigate(`/assessments/${assessmentId}/sessions/${session.id}/portfolio`)}
-            >
-              Results
-            </Button>
+          {isEnded && (
+            <>
+              {session.end_reason === "error" && onReinvite && (
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="h-7 px-2 text-xs text-muted-foreground hover:text-foreground"
+                  onClick={() => onReinvite(session.candidate_name)}
+                  title="Generate link baru untuk kandidat ini"
+                >
+                  <RotateCcw className="h-3 w-3 mr-1" /> Re-invite
+                </Button>
+              )}
+              <Button
+                variant="outline"
+                size="sm"
+                className="h-7 px-2 text-xs"
+                onClick={() => navigate(`/assessments/${assessmentId}/sessions/${session.id}/portfolio`)}
+              >
+                Results
+              </Button>
+            </>
           )}
         </div>
       </div>
@@ -195,6 +210,19 @@ export default function AssessmentInvitePage() {
     setNewSession(null);
     try {
       const res = await assessmentsApi.createSession(Number(id), candidateNameInput.trim() || undefined);
+      const created = res.data.session;
+      setNewSession(created);
+      setSessions((prev) => [created, ...prev]);
+    } finally {
+      setCreatingSession(false);
+    }
+  };
+
+  const handleReinvite = async (candidateName?: string) => {
+    setCreatingSession(true);
+    setNewSession(null);
+    try {
+      const res = await assessmentsApi.createSession(Number(id), candidateName?.trim() || undefined);
       const created = res.data.session;
       setNewSession(created);
       setSessions((prev) => [created, ...prev]);
@@ -364,6 +392,7 @@ export default function AssessmentInvitePage() {
                     if (s) copyLink(s, sid);
                   }}
                   copiedId={copiedId}
+                  onReinvite={handleReinvite}
                 />
               ))}
             </CardContent>

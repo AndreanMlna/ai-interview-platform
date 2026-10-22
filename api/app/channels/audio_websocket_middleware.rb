@@ -111,6 +111,14 @@ class AudioWebSocketMiddleware
       return
     end
 
+    if ENV['GEMINI_API_KEY'].blank?
+      Rails.logger.error("[AudioWS] GEMINI_API_KEY is blank in environment/application.yml for session #{session.id}")
+      send_json(browser_ws, type: 'error', code: 'missing_gemini_key',
+                            message: 'AI Service belum dikonfigurasi (GEMINI_API_KEY belum diisi di config/application.yml). Silakan hubungi administrator.', recoverable: false)
+      browser_ws.close
+      return
+    end
+
     Sessions::StartHandler.new(session).call unless session.active?
 
     state.turn_counter = session.transcript_turns.maximum(:turn_number).to_i
