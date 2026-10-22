@@ -8,7 +8,7 @@ module Portfolios
     def initialize(session:, gemini_client: nil)
       @session = session
       @gemini_client = gemini_client || Gemini::HttpClient.new(
-        model:   ENV.fetch('GEMINI_PRO_MODEL', 'gemini-2.0-pro-001'),
+        model:   ENV.fetch('GEMINI_PRO_MODEL', 'gemini-2.5-pro'),
         timeout: 180  # up to 3 minutes for large transcripts
       )
     end
@@ -51,7 +51,9 @@ module Portfolios
         discovered: coverage_maps.select(&:is_discovered).map { |m| coverage_json(m) }
       }.to_json
 
-      transcript_text = turns.map { |t| "[#{t.speaker.upcase}]: #{t.text}" }.join("\n")
+      raw_transcript = turns.map { |t| "[#{t.speaker.upcase}]: #{t.text}" }.join("\n")
+      # UU No. 27/2022 (UU PDP) Compliance: mask candidate PII before sending to external LLM
+      transcript_text = Security::PiiSanitizer.mask(raw_transcript, candidate_name: @session.candidate_name)
 
       <<~PROMPT
         You are evaluating a completed skills assessment interview to produce a structured skill portfolio.

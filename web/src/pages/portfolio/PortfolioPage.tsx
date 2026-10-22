@@ -23,21 +23,26 @@ export default function PortfolioPage() {
   const [selectedVacancy, setSelectedVacancy] = useState<string>("");
   const [exporting, setExporting] = useState<"pdf" | "json" | null>(null);
   const [candidateName, setCandidateName] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(null);
 
   const fetchPortfolio = useCallback(async () => {
-    const res = await sessionsApi.getPortfolio(Number(sessionId));
-    const data = res.data as any;
-    if (data.status === "generating" || data.portfolio?.generation_status === "generating" || data.portfolio?.generation_status === "pending") {
-      setGenerating(true);
-    } else if (data.portfolio) {
-      setPortfolio(data.portfolio);
-      setGenerating(false);
-      // Build overrides map
-      const overrideMap: Record<number, AssessorOverride> = {};
-      data.portfolio.overrides.forEach((o: AssessorOverride) => {
-        overrideMap[o.portfolio_skill_id] = o;
-      });
-      setOverrides(overrideMap);
+    try {
+      const res = await sessionsApi.getPortfolio(Number(sessionId));
+      const data = res.data as any;
+      if (data.status === "generating" || data.portfolio?.generation_status === "generating" || data.portfolio?.generation_status === "pending") {
+        setGenerating(true);
+      } else if (data.portfolio) {
+        setPortfolio(data.portfolio);
+        setGenerating(false);
+        // Build overrides map
+        const overrideMap: Record<number, AssessorOverride> = {};
+        data.portfolio.overrides.forEach((o: AssessorOverride) => {
+          overrideMap[o.portfolio_skill_id] = o;
+        });
+        setOverrides(overrideMap);
+      }
+    } catch (err: any) {
+      setError(err?.response?.data?.error || "Failed to load session portfolio.");
     }
   }, [sessionId]);
 
@@ -47,7 +52,9 @@ export default function PortfolioPage() {
         setVacancies(vRes.data.vacancies);
         setCandidateName(sRes.data.session.candidate_name ?? null);
       })
-      .catch(() => {})
+      .catch((err) => {
+        setError(err?.response?.data?.error || "Failed to load session data.");
+      })
       .finally(() => setLoading(false));
   }, [fetchPortfolio, sessionId]);
 
@@ -153,6 +160,24 @@ export default function PortfolioPage() {
         </div>
       </div>
 
+      {/* Error state */}
+      {error && !portfolio && (
+        <div className="border border-destructive/40 bg-destructive/5 rounded-lg p-6 text-center space-y-3">
+          <p className="text-sm text-destructive font-medium">{error}</p>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => {
+              setError(null);
+              setLoading(true);
+              fetchPortfolio().finally(() => setLoading(false));
+            }}
+          >
+            <RefreshCw className="h-3.5 w-3.5 mr-1.5" /> Try Again
+          </Button>
+        </div>
+      )}
+
       {/* Generating state */}
       {generating && (
         <div className="border rounded-lg p-12 text-center space-y-3">
@@ -189,16 +214,22 @@ export default function PortfolioPage() {
           {/* Configured skills */}
           <div className="space-y-3">
             <h2 className="text-sm font-semibold">Configured Skills</h2>
-            {portfolio.skills
-              .filter((s) => !s.is_discovered)
-              .map((skill) => (
-                <SkillPortfolioCard
-                  key={skill.id}
-                  skill={skill}
-                  override={overrides[skill.id]}
-                  onOverrideSaved={(o) => handleOverrideSaved(skill.id, o)}
-                />
-              ))}
+            {portfolio.skills.filter((s) => !s.is_discovered).length === 0 ? (
+              <div className="border border-dashed rounded-lg p-6 text-center text-sm text-muted-foreground">
+                No configured skills were assessed in this session.
+              </div>
+            ) : (
+              portfolio.skills
+                .filter((s) => !s.is_discovered)
+                .map((skill) => (
+                  <SkillPortfolioCard
+                    key={skill.id}
+                    skill={skill}
+                    override={overrides[skill.id]}
+                    onOverrideSaved={(o) => handleOverrideSaved(skill.id, o)}
+                  />
+                ))
+            )}
           </div>
 
           {/* Discovered skills */}

@@ -10,7 +10,7 @@ module Coverage
     def initialize(session:, gemini_client: nil)
       @session = session
       @gemini_client = gemini_client || Gemini::HttpClient.new(
-        model:   ENV.fetch('GEMINI_FLASH_MODEL', 'gemini-2.0-flash-001'),
+        model:   ENV.fetch('GEMINI_FLASH_MODEL', 'gemini-2.5-flash'),
         timeout: 45
       )
     end
@@ -45,7 +45,9 @@ module Coverage
         discovered: coverage_maps.select(&:is_discovered).map { |m| coverage_map_json(m) }
       }.to_json
 
-      turns_text = turns.map { |t| "[#{t.speaker}]: #{t.text}" }.join("\n")
+      raw_turns = turns.map { |t| "[#{t.speaker}]: #{t.text}" }.join("\n")
+      # UU No. 27/2022 (UU PDP) Compliance: mask candidate PII before sending to external LLM
+      turns_text = Security::PiiSanitizer.mask(raw_turns, candidate_name: @session.candidate_name)
 
       <<~PROMPT
         You are analyzing a transcript excerpt from a live skills assessment interview.
