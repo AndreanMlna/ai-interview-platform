@@ -3,6 +3,7 @@
 require 'faye/websocket'
 require 'json'
 require 'base64'
+require_relative 'web_socket_client'
 
 module Gemini
   # Manages a persistent WebSocket connection to Gemini Live API.
@@ -63,7 +64,16 @@ module Gemini
     # Opens the WebSocket and sends setup; resumes a prior session if a handle is provided.
     def connect(resumption_handle: nil)
       @setup_complete = false
-      @ws = Faye::WebSocket::Client.new(
+
+      # Monozukuri SRE Resilience: On Windows or environments where EventMachine lacks SSL,
+      # use native OpenSSL Gemini::WebSocketClient to prevent C++ terminate runtime crash.
+      client_klass = if defined?(EventMachine) && EventMachine.respond_to?(:ssl?) && EventMachine.ssl?
+                       Faye::WebSocket::Client
+                     else
+                       Gemini::WebSocketClient
+                     end
+
+      @ws = client_klass.new(
         GEMINI_WS_URL,
         nil,
         headers: { 'x-goog-api-key' => @api_key }
