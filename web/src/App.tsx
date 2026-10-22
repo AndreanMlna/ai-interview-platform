@@ -3,6 +3,7 @@ import AssessorLayout from "@/components/layout/AssessorLayout";
 import CandidateLayout from "@/components/layout/CandidateLayout";
 import ProtectedRoute from "@/components/ProtectedRoute";
 import LoginPage from "@/pages/auth/LoginPage";
+import RegisterPage from "@/pages/auth/RegisterPage";
 import AssessmentListPage from "@/pages/assessments/AssessmentListPage";
 import AssessmentNewPage from "@/pages/assessments/AssessmentNewPage";
 import AssessmentEditPage from "@/pages/assessments/AssessmentEditPage";
@@ -21,6 +22,8 @@ export default function App() {
     <Routes>
       {/* Auth routes */}
       <Route path="/login" element={<LoginPage />} />
+      <Route path="/register" element={<RegisterPage />} />
+      <Route path="/signup" element={<RegisterPage />} />
 
       {/* Assessor routes (protected) */}
       <Route element={<ProtectedRoute />}>

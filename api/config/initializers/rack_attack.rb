@@ -14,9 +14,9 @@ class Rack::Attack
     Rack::Attack.cache.store = ActiveSupport::Cache::MemoryStore.new
   end
 
-  # Throttle login attempts: 5 per minute per IP.
-  throttle('auth/login', limit: 5, period: 1.minute) do |req|
-    req.ip if req.path == '/api/v1/auth/login' && req.post?
+  # Throttle auth attempts (login & register): 10 per minute per IP.
+  throttle('auth/endpoints', limit: 10, period: 1.minute) do |req|
+    req.ip if req.post? && req.path.match?(%r{\A/api/v1/(auth/login|auth/register|signup)\z})
   end
 
   # Throttle candidate-facing endpoints: 30 per minute per IP.

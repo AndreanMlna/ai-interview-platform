@@ -19,7 +19,31 @@ module Api
         json_response({ token:, user: { id: user.id, email: user.email, role: user.role } })
       end
 
+      # POST /api/v1/auth/register or POST /api/v1/signup
+      def register
+        user = User.new(register_params)
+        user.role = register_params[:role].presence || 'admin'
+
+        if user.save
+          scheme = resolve_scheme
+          token  = JsonWebToken.encode({ user_id: user.id, role: user.role, scheme: })
+
+          json_response({
+            message: 'User registered successfully',
+            token:,
+            user: { id: user.id, email: user.email, role: user.role }
+          }, :created)
+        else
+          json_error(user.errors.full_messages.join(', '), :unprocessable_entity)
+        end
+      end
+
       private
+
+      def register_params
+        payload = params.key?(:authentication) ? params.require(:authentication) : params
+        payload.permit(:email, :password, :password_confirmation, :role)
+      end
 
       def resolve_scheme
         request.headers['X-Tenant-Scheme'].presence ||
