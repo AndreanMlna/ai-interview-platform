@@ -77,7 +77,26 @@ else
   puts "  Created organization: id=#{result['id']} scheme=#{result['scheme']}"
 end
 
-# ── B7 Skill Taxonomy (22 pilot skills) ──────────────────────────────────────
+# ── Development Admin Users ──────────────────────────────────────────────────
+puts ""
+puts "== Seeding Development Admin Users =="
+
+dev_users = [
+  { email: "zahranazmi97@gmail.com", password: "123123", role: "admin" },
+  { email: "admin@rakamin.com", password: "password123", role: "admin" }
+]
+
+dev_users.each do |user_data|
+  user = User.find_or_initialize_by(email: user_data[:email])
+  user.password = user_data[:password]
+  user.role = user_data[:role]
+  if user.save
+    puts "  Admin User #{user.email} (role: #{user.role}) ready."
+  else
+    puts "  Error creating user #{user_data[:email]}: #{user.errors.full_messages.join(', ')}"
+  end
+end
+
 
 B7_SKILLS = [
   # ── Engineering ──────────────────────────────────────────────────────────────
