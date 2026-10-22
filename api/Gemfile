@@ -43,6 +43,7 @@ gem 'bootsnap', require: false
 gem 'kaminari'
 gem 'listen', '~> 3.2'
 gem 'tzinfo-data', platforms: %i[windows jruby x64_mingw]
+gem 'wdm', '>= 0.1.0', platforms: %i[windows mingw x64_mingw]
 
 group :development, :test do
   gem 'byebug', platforms: %i[mri mingw x64_mingw]
