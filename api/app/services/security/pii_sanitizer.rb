@@ -19,8 +19,8 @@ module Security
       sanitized.gsub!(NIK_REGEX, "[NIK_REDACTED]")
       sanitized.gsub!(CREDIT_CARD_REGEX, "[CARD_REDACTED]")
 
-      if candidate_name.present? && candidate_name.strip.length >= 3
-        sanitized.gsub!(/#{Regexp.escape(candidate_name.strip)}/i, "[CANDIDATE_NAME]")
+      if candidate_name && !candidate_name.to_s.strip.empty? && candidate_name.to_s.strip.length >= 3
+        sanitized.gsub!(/#{Regexp.escape(candidate_name.to_s.strip)}/i, "[CANDIDATE_NAME]")
       end
 
       sanitized

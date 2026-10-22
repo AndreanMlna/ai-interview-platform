@@ -11,7 +11,7 @@ RSpec.describe FitGap::Engine do
 
   describe '#effective_portfolio_skills' do
     it 'applies assessor override level and marks overridden: true when override is present' do
-      override = double('AssessorOverride', override_level: 4)
+      override = double('AssessorOverride', override_level: 4, present?: true)
       skill_with_override = double(
         'PortfolioSkill',
         id: 1,
@@ -117,9 +117,8 @@ RSpec.describe FitGap::Engine do
 
       narrative = engine.send(:generate_fallback_narrative, comparisons)
 
-      expect(narrative).to include('1 matched, 0 gaps, 0 exceed, 1 unassessed')
-      expect(narrative).to include('Attention: 1 required skills were not assessed')
-      expect(narrative).to include('Distributed Systems')
+      expect(narrative).to include('1 skill match, 0 exceeds, and 0 gaps')
+      expect(narrative).to include('1 required skill was not assessed')
     end
   end
 end

@@ -1,4 +1,4 @@
-# frozen_string_literal: true
+require 'active_support/all'
 
 RSpec.configure do |config|
   config.expect_with :rspec do |expectations|
