@@ -164,16 +164,46 @@ export default function FitGapReportPage() {
           <Separator />
 
           {/* Culture & competency */}
-          <Card>
-            <CardHeader className="pb-3">
-              <CardTitle className="text-sm">Culture &amp; Competency Fit</CardTitle>
-            </CardHeader>
-            <CardContent className="px-4 pb-4">
-              <p className="text-sm leading-relaxed text-foreground whitespace-pre-wrap">
-                {report.culture_narrative || report.overall_narrative}
-              </p>
-            </CardContent>
-          </Card>
+          {report.culture_narrative && (
+            <Card>
+              <CardHeader className="pb-3">
+                <CardTitle className="text-sm font-semibold flex items-center gap-2">
+                  <span className="w-2 h-2 rounded-full bg-blue-500" />
+                  Culture &amp; Competency Fit
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="px-4 pb-4">
+                <p className="text-sm leading-relaxed text-foreground whitespace-pre-wrap">
+                  {report.culture_narrative}
+                </p>
+              </CardContent>
+            </Card>
+          )}
+
+          {/* Overall hiring narrative */}
+          {report.overall_narrative && (
+            <Card>
+              <CardHeader className="pb-3">
+                <CardTitle className="text-sm font-semibold flex items-center gap-2">
+                  <span className="w-2 h-2 rounded-full bg-teal-500" />
+                  Overall Hiring Recommendation
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="px-4 pb-4">
+                <p className="text-sm leading-relaxed text-foreground whitespace-pre-wrap">
+                  {report.overall_narrative}
+                </p>
+              </CardContent>
+            </Card>
+          )}
+
+          {!report.culture_narrative && !report.overall_narrative && (
+            <Card>
+              <CardContent className="p-4 text-sm text-muted-foreground italic text-center">
+                No narrative evaluation generated for this fit/gap report.
+              </CardContent>
+            </Card>
+          )}
 
           {/* Discovered skills */}
           {portfolio && portfolio.skills.some((s) => s.is_discovered) && (
