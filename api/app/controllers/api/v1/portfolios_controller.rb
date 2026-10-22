@@ -10,7 +10,7 @@ module Api
 
       # GET /api/v1/sessions/:id/portfolio
       def show
-        if @portfolio.nil? || @portfolio.generating?
+        if @portfolio.nil? || @portfolio.in_progress?
           return render json: { status: "generating" }, status: :accepted
         end
 
@@ -37,7 +37,17 @@ module Api
         end
 
         portfolio.update!(generation_status: "pending", generation_error: nil)
-        PortfolioGeneratorWorker.perform_async(@session.id)
+
+        begin
+          PortfolioGeneratorWorker.perform_async(@session.id)
+        rescue StandardError => e
+          Rails.logger.warn("[PortfoliosController] Sidekiq/Redis enqueue failed (#{e.message}). Falling back to asynchronous thread.")
+          Thread.new do
+            Rails.application.executor.wrap do
+              PortfolioGeneratorWorker.new.perform(@session.id)
+            end
+          end
+        end
 
         json_response(
           message:   "Portfolio generation queued",

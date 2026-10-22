@@ -13,7 +13,10 @@ class Portfolio < ApplicationRecord
   scope :failed,      -> { where(generation_status: 'failed') }
   scope :generating,  -> { where(generation_status: 'generating') }
 
+  def pending?     = generation_status == 'pending'
+  def in_progress? = pending? || generating?
   def complete?    = generation_status == 'complete'
   def generating?  = generation_status == 'generating'
   def failed?      = generation_status == 'failed'
 end
+

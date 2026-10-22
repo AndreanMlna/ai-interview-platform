@@ -20,6 +20,25 @@ module Portfolios
         generation_status: 'pending'
       )
 
+      turns = @session.transcript_turns.ordered
+      if turns.empty?
+        portfolio.portfolio_skills.destroy_all
+        @session.assessment.assessment_skills.order(:display_order).each do |s|
+          portfolio.portfolio_skills.create!(
+            skill_id:           s.skill_id,
+            skill_label:        s.skill_label,
+            is_discovered:      false,
+            ai_level:           1,
+            ai_confidence:      'low',
+            evidence:           [],
+            competency_summary: 'Sesi wawancara diakhiri sebelum respons suara atau transkrip kandidat diterima.'
+          )
+        end
+        portfolio.update!(generation_status: 'complete', generated_at: Time.current, generation_error: nil)
+        Rails.logger.info("[N10] Portfolio for session #{@session.id} generated with zero-turn baseline")
+        return portfolio
+      end
+
       portfolio.update!(generation_status: 'generating')
 
       prompt   = build_prompt

@@ -68,8 +68,17 @@ module Sessions
       portfolio = @session.reload.portfolio
       return unless portfolio
 
-      PortfolioGeneratorWorker.perform_async(@session.id)
-      Rails.logger.info("[N9/EndHandler] Enqueued N10 for session #{@session.id}")
+      begin
+        PortfolioGeneratorWorker.perform_async(@session.id)
+        Rails.logger.info("[N9/EndHandler] Enqueued N10 for session #{@session.id}")
+      rescue StandardError => e
+        Rails.logger.warn("[N9/EndHandler] Sidekiq/Redis enqueue failed (#{e.message}). Falling back to asynchronous thread.")
+        Thread.new do
+          Rails.application.executor.wrap do
+            PortfolioGeneratorWorker.new.perform(@session.id)
+          end
+        end
+      end
     end
   end
 end

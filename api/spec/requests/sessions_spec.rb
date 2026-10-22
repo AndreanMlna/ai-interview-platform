@@ -83,4 +83,39 @@ RSpec.describe 'Sessions API & Invite Redirection', type: :request do
       expect(response).to have_http_status(:not_found)
     end
   end
+
+  describe 'POST /api/v1/sessions/:id/end_session' do
+    let!(:active_session) do
+      assessment.sessions.create!(
+        candidate_name: 'Wafa Candidate',
+        tenant_id: assessment.tenant_id,
+        status: 'active',
+        started_at: Time.current
+      )
+    end
+
+    it 'ends an active session cleanly and returns 200 OK' do
+      post "/api/v1/sessions/#{active_session.id}/end_session",
+           params: { session: { reason: 'manual_assessor' } }.to_json,
+           headers: headers
+
+      expect(response).to have_http_status(:ok)
+      json = JSON.parse(response.body)
+      expect(json['session']['status']).to eq('ended')
+      expect(active_session.reload.status).to eq('ended')
+      expect(active_session.portfolio).to be_present
+    end
+
+    it 'is idempotent and returns 200 OK when session is already ended' do
+      active_session.update!(status: 'ended', end_reason: 'manual_assessor', ended_at: Time.current)
+
+      post "/api/v1/sessions/#{active_session.id}/end_session",
+           params: { session: { reason: 'manual_assessor' } }.to_json,
+           headers: headers
+
+      expect(response).to have_http_status(:ok)
+      json = JSON.parse(response.body)
+      expect(json['session']['status']).to eq('ended')
+    end
+  end
 end

@@ -62,8 +62,14 @@ export default function LiveMonitorPage() {
   const lastTurnRef = useRef<number>(0);
   const pollTimerRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
-  const { coverageMap, sessionEnded, sessionEndReason, isConnected } =
+  const [dbSessionEnded, setDbSessionEnded] = useState(false);
+  const [dbSessionEndReason, setDbSessionEndReason] = useState<string | null>(null);
+
+  const { coverageMap, sessionEnded: wsSessionEnded, sessionEndReason: wsSessionEndReason, isConnected } =
     useCoverageWebSocket(Number(sessionId));
+
+  const sessionEnded = wsSessionEnded || dbSessionEnded;
+  const sessionEndReason = wsSessionEndReason || dbSessionEndReason;
 
   // On session_ended from WS — stop polling, update local state
   useEffect(() => {
@@ -83,7 +89,11 @@ export default function LiveMonitorPage() {
         const s = sRes.data.session as any;
         setStartedAt(s.started_at ?? null);
         setAssessmentName(s.assessment?.name ?? "");
-        if (s.status !== "active") setSessionActive(false);
+        if (s.status !== "active") {
+          setSessionActive(false);
+          setDbSessionEnded(true);
+          setDbSessionEndReason(s.end_reason ?? null);
+        }
 
         const turns = tRes.data.turns;
         setTranscript(turns.slice(-10));
@@ -118,10 +128,21 @@ export default function LiveMonitorPage() {
 
   const handleEndSession = async () => {
     setEnding(true);
+    setEndError(false);
     try {
       await sessionsApi.endSession(Number(sessionId));
       navigate(`/assessments/${id}/sessions/${sessionId}/portfolio`);
     } catch {
+      // Defensive fallback: check if session actually ended in database
+      try {
+        const sRes = await sessionsApi.get(Number(sessionId));
+        if (sRes.data.session.status === "ended") {
+          navigate(`/assessments/${id}/sessions/${sessionId}/portfolio`);
+          return;
+        }
+      } catch {
+        // ignore fallback fetch error
+      }
       setEnding(false);
       setEndError(true);
     }
@@ -284,8 +305,16 @@ export default function LiveMonitorPage() {
       </Card>
 
       {endError && (
-        <div className="border border-destructive/40 rounded-lg p-3 text-sm text-destructive">
-          Failed to end session. Please try again.
+        <div className="border border-destructive/40 bg-destructive/5 rounded-lg p-3 text-sm text-destructive flex items-center justify-between gap-2">
+          <span>Failed to end session. Sesi mungkin sudah diakhiri.</span>
+          <Button
+            size="sm"
+            variant="outline"
+            className="text-destructive border-destructive/40 hover:bg-destructive/10"
+            onClick={() => navigate(`/assessments/${id}/sessions/${sessionId}/portfolio`)}
+          >
+            Buka Portfolio →
+          </Button>
         </div>
       )}
 
